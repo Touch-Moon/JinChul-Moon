@@ -1,0 +1,8 @@
+# Files that shopify theme push/pull should never sync to the store
+README.md
+.gitignore
+.shopifyignore
+.github/
+CLAUDE.md
+AGENTS.md
+*.md
