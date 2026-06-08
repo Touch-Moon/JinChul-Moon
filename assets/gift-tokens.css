@@ -1,0 +1,118 @@
+/* =============================================================================
+   GIFT GUIDE — DESIGN TOKEN LAYER
+   =============================================================================
+   This is the SINGLE place to tune the visual design. Layout and component
+   files (gift-banner.css, gift-grid.css, gift-popup.css) only reference these
+   tokens via var(--gg-*) and should not need editing for visual changes.
+
+   FOR THE DESIGNER
+   ----------------
+   - Change VALUES here only.
+   - Tokens tagged  [FIGMA]  are placeholders — set them to the exact value
+     measured from the Figma file during the design pass.
+   - rem scale: Dawn sets html font-size to 62.5% (theme.liquid), so at the
+     default font scale  1rem = 10px . A Figma pixel maps 1:1 to rem ÷ 10
+     (e.g. 240px = 24rem, 96px = 9.6rem). Use rem so it scales with the theme.
+   - Some color/text tokens can ALSO be overridden per-section from the Theme
+     Customizer: a section injects inline `--gg-*` vars that win over these
+     defaults (see gift-banner.liquid). These values are the fallback.
+   - Breakpoints cannot be CSS variables inside @media. They are documented at
+     the bottom and used consistently across the component files.
+   ============================================================================= */
+
+:root {
+  /* ── Color ──────────────────────────────────────────────────────────────
+     Surfaces and text default to Dawn's theme colors so the page inherits the
+     store palette; brand accents (yellow pill, black CTA) are explicit.       */
+  --gg-bg: rgb(var(--color-background, 255 255 255));   /* page background       */
+  --gg-text: rgb(var(--color-foreground, 18 18 18));    /* primary text          */
+  --gg-text-muted: #555555;            /* [FIGMA] subcopy, strip, secondary text */
+  --gg-border: #e5e5e5;                /* [FIGMA] hairlines, dividers            */
+
+  --gg-accent: #f5c518;                /* [FIGMA] "CHOOSE GIFT" yellow pill bg   */
+  --gg-accent-hover: #e0b000;          /* [FIGMA] pill hover                     */
+  --gg-accent-text: #000000;           /* [FIGMA] text on accent                 */
+
+  --gg-cta: #000000;                   /* [FIGMA] "SHOP NOW" / "ADD TO CART" bg  */
+  --gg-cta-hover: #222222;             /* [FIGMA] CTA hover                      */
+  --gg-cta-text: #ffffff;              /* [FIGMA] text on CTA                    */
+
+  --gg-strip-bg: #f2f2f2;              /* [FIGMA] bottom sustainability strip bg */
+  --gg-strip-text: #555555;            /* [FIGMA] strip text                     */
+
+  --gg-marker-bg: #ffffff;             /* [FIGMA] grid "+" circle background     */
+  --gg-marker-text: #000000;           /* [FIGMA] grid "+" glyph                 */
+
+  --gg-popup-bg: #ffffff;              /* [FIGMA] quick-view card background     */
+  --gg-popup-overlay: rgba(0, 0, 0, 0.5); /* [FIGMA] dimmer behind popup        */
+
+  /* ── Typography ─────────────────────────────────────────────────────────
+     Families default to the store's Dawn fonts; override if Figma uses a
+     specific typeface. Sizes use clamp() so they scale between mobile↔desktop. */
+  --gg-font-heading: var(--font-heading-family, Georgia, serif);
+  --gg-font-body: var(--font-body-family, system-ui, sans-serif);
+
+  --gg-fs-hero: clamp(4rem, 8vw, 9.6rem);        /* [FIGMA] "The Gift Guide"     */
+  --gg-fs-h2: 2.4rem;                            /* [FIGMA] popup product title  */
+  --gg-fs-subcopy: clamp(1.4rem, 2vw, 1.8rem);   /* [FIGMA] hero sub-copy        */
+  --gg-fs-body: 1.6rem;                          /* [FIGMA] descriptions, base   */
+  --gg-fs-label: 1.2rem;                         /* [FIGMA] uppercase labels     */
+
+  --gg-fw-heading: 800;                /* [FIGMA] hero/headline weight           */
+  --gg-fw-bold: 700;                   /* [FIGMA] buttons, emphasis              */
+  --gg-fw-body: 400;                   /* [FIGMA] body                           */
+
+  --gg-lh-tight: 1.05;                 /* headlines                              */
+  --gg-lh-body: 1.6;                   /* paragraphs                             */
+  --gg-tracking-label: 0.1em;          /* [FIGMA] uppercase label letter-spacing */
+  --gg-tracking-wide: 0.12em;          /* [FIGMA] strip / wide labels            */
+
+  /* ── Spacing & layout ───────────────────────────────────────────────────
+     Modular scale for paddings/margins + page-level rhythm.                    */
+  --gg-space-1: 0.4rem;
+  --gg-space-2: 0.8rem;
+  --gg-space-3: 1.6rem;
+  --gg-space-4: 2.4rem;
+  --gg-space-5: 3.2rem;
+  --gg-space-6: 4.8rem;
+
+  --gg-container: var(--page-width, 120rem);     /* max content width           */
+  --gg-gutter: clamp(2rem, 5vw, 5rem);           /* horizontal page padding     */
+  --gg-section-gap: clamp(6rem, 12vw, 24rem);    /* [FIGMA] gap between sections (Figma 240px) */
+
+  /* ── Grid (Grid section) ────────────────────────────────────────────────  */
+  --gg-grid-cols: 3;                   /* [FIGMA] desktop columns (6 = 3×2)      */
+  --gg-grid-cols-tablet: 2;            /* tablet columns                         */
+  --gg-grid-cols-mobile: 1;            /* mobile columns                         */
+  --gg-grid-gap: 1.6rem;               /* [FIGMA] gap between cards              */
+  --gg-card-ratio: 3 / 4;              /* [FIGMA] product card aspect ratio      */
+
+  --gg-marker-size: 4rem;              /* [FIGMA] "+" circle diameter            */
+  --gg-marker-offset: 1.6rem;          /* [FIGMA] inset of "+" from card edge    */
+
+  /* ── Shape & elevation ──────────────────────────────────────────────────  */
+  --gg-radius: 0rem;                   /* [FIGMA] generic corner radius          */
+  --gg-radius-pill: 3rem;              /* [FIGMA] yellow pill button radius      */
+  --gg-radius-popup: 0.8rem;           /* [FIGMA] quick-view card radius         */
+  --gg-border-width: 0.1rem;
+  --gg-shadow-popup: 0 2rem 6rem rgba(0, 0, 0, 0.2); /* [FIGMA] popup elevation  */
+
+  /* ── Motion ─────────────────────────────────────────────────────────────
+     Button animation timing lives here so its "feel" is tunable in one spot.
+     gift-popup.css / gift-banner.css honor prefers-reduced-motion separately.  */
+  --gg-dur: 0.25s;                     /* default transition duration            */
+  --gg-dur-fast: 0.15s;                /* quick feedback (hover, focus)          */
+  --gg-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --gg-btn-shift: 0.6rem;              /* [FIGMA] how far CTA/arrow slides on hover */
+}
+
+/* =============================================================================
+   BREAKPOINTS (reference — aligned with Dawn)
+   -----------------------------------------------------------------------------
+   CSS custom properties cannot be used inside @media conditions, so these are
+   constants. Use the SAME values across every gift-*.css file:
+
+     Mobile   : max-width 749px   (1 column,  stacked header)
+     Tablet   : 750px – 989px     (2 columns)
+     Desktop  : min-width 990px   (3 columns, full layout)
+   ============================================================================= */
