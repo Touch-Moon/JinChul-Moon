@@ -1,0 +1,40 @@
+{% comment %}
+  gift-button — shared CTA used by the banner and the popup's Add to Cart.
+  Renders an <a> when `url` is provided, otherwise a <button>. Every gift
+  button is uppercase (CSS) with an automatic trailing arrow, so editors
+  type plain label text and never the "→".
+
+  Params:
+    label   {string}  required — visible text (no arrow; it is added here)
+    url     {string}  optional — when present the control is a link
+    variant {string}  'accent' (yellow→black on hover, default)
+                      | 'invert' (black→yellow on hover)
+    type    {string}  button type when not a link (default 'button')
+    id      {string}  optional element id (e.g. for JS hooks)
+
+  Usage:
+    {% render 'gift-button', label: 'Shop now', url: '/collections/all', variant: 'invert' %}
+{% endcomment %}
+
+{%- liquid
+  assign gb_variant = variant | default: 'accent'
+  assign gb_type = type | default: 'button'
+-%}
+
+{%- capture gb_inner -%}
+  <span class="gift-button__label">{{ label }}</span>
+  {%- comment -%} Decorative arrow — hidden from assistive tech. {%- endcomment -%}
+  <svg class="gift-button__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+  </svg>
+{%- endcapture -%}
+
+{%- if url != blank -%}
+  <a class="gift-button gift-button--{{ gb_variant }}" href="{{ url }}"{% if id != blank %} id="{{ id }}"{% endif %}>
+    {{ gb_inner }}
+  </a>
+{%- else -%}
+  <button class="gift-button gift-button--{{ gb_variant }}" type="{{ gb_type }}"{% if id != blank %} id="{{ id }}"{% endif %}>
+    {{ gb_inner }}
+  </button>
+{%- endif -%}

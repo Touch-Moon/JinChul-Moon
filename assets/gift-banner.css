@@ -1,0 +1,168 @@
+/* =============================================================================
+   GIFT BANNER — layout skeleton + shared button component
+   -----------------------------------------------------------------------------
+   Structure and spacing only; every visual value is a var(--gg-*) token from
+   gift-tokens.css so the design pass happens there, not here.
+   ============================================================================= */
+
+/* ── Shared button (gift-button snippet) ─────────────────────────────────────
+   Two variants invert their colors on hover, per the Figma spec:
+     --accent : yellow → black  (Choose gift, Add to cart)
+     --invert : black  → yellow (Shop now)
+   Both gain the hover lift shadow. All gift buttons are uppercase.            */
+.gift-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-3) var(--gg-space-5);
+  font-family: var(--gg-font-body);
+  font-weight: var(--gg-fw-bold);
+  font-size: var(--gg-fs-label);
+  letter-spacing: var(--gg-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--gg-dur) var(--gg-ease),
+    color var(--gg-dur) var(--gg-ease),
+    box-shadow var(--gg-dur) var(--gg-ease);
+}
+
+.gift-button__arrow {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+}
+
+.gift-button--accent {
+  background-color: var(--gg-yellow);
+  color: var(--gg-black);
+}
+.gift-button--accent:hover,
+.gift-button--accent:focus-visible {
+  background-color: var(--gg-black);
+  color: var(--gg-white);
+  box-shadow: var(--gg-btn-shadow-hover);
+}
+
+.gift-button--invert {
+  background-color: var(--gg-black);
+  color: var(--gg-white);
+}
+.gift-button--invert:hover,
+.gift-button--invert:focus-visible {
+  background-color: var(--gg-yellow);
+  color: var(--gg-black);
+  box-shadow: var(--gg-btn-shadow-hover);
+}
+
+/* ── Section shell ───────────────────────────────────────────────────────── */
+.gift-banner {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--gg-bg);
+  color: var(--gg-text);
+  font-family: var(--gg-font-body);
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
+.gift-banner__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+  padding: var(--gg-space-4) var(--gg-gutter);
+}
+
+.gift-banner__logo {
+  font-weight: var(--gg-fw-bold);
+  font-size: var(--gg-fs-body);
+  letter-spacing: var(--gg-tracking-label);
+  text-transform: uppercase;
+}
+
+.gift-banner__tagline {
+  margin: 0;
+  font-size: var(--gg-fs-body);
+  color: var(--gg-text-muted);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+.gift-banner__hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gg-section-gap) var(--gg-gutter);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Background illustration layer — sits behind, never intercepts clicks. */
+.gift-banner__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.gift-banner__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gift-banner__hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gg-space-5);
+  max-width: var(--gg-container);
+}
+
+.gift-banner__headline {
+  margin: 0;
+  font-family: var(--gg-font-body); /* Figma: hero title is Jost */
+  font-size: var(--gg-fs-hero);
+  font-weight: var(--gg-fw-heading);
+  line-height: var(--gg-lh-tight);
+}
+
+.gift-banner__subcopy {
+  margin: 0;
+  max-width: 56rem;
+  font-size: var(--gg-fs-subcopy);
+  line-height: var(--gg-lh-body);
+  color: var(--gg-text-muted);
+}
+
+/* ── Sustainability strip ────────────────────────────────────────────────── */
+.gift-banner__strip {
+  padding: var(--gg-space-3) var(--gg-gutter);
+  background-color: var(--gg-strip-bg);
+  color: var(--gg-strip-text);
+  text-align: center;
+}
+.gift-banner__strip-text {
+  font-size: var(--gg-fs-label);
+  letter-spacing: var(--gg-tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── Mobile (< 750px) ────────────────────────────────────────────────────── */
+@media screen and (max-width: 749px) {
+  .gift-banner__bar {
+    flex-direction: column;
+    gap: var(--gg-space-3);
+    text-align: center;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .gift-button {
+    transition: none;
+  }
+}

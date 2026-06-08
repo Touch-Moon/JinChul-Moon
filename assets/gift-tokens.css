@@ -29,13 +29,12 @@
   --gg-text-muted: #555555;            /* [FIGMA] subcopy, strip, secondary text */
   --gg-border: #e5e5e5;                /* [FIGMA] hairlines, dividers            */
 
-  --gg-accent: #f5c518;                /* [FIGMA] "CHOOSE GIFT" yellow pill bg   */
-  --gg-accent-hover: #e0b000;          /* [FIGMA] pill hover                     */
-  --gg-accent-text: #000000;           /* [FIGMA] text on accent                 */
-
-  --gg-cta: #000000;                   /* [FIGMA] "SHOP NOW" / "ADD TO CART" bg  */
-  --gg-cta-hover: #222222;             /* [FIGMA] CTA hover                      */
-  --gg-cta-text: #ffffff;              /* [FIGMA] text on CTA                    */
+  /* Brand palette (Figma) — buttons & accents reference these */
+  --gg-yellow: #fff544;                /* accent: Choose Gift / Add to Cart base; Shop Now hover */
+  --gg-black: #000000;
+  --gg-white: #ffffff;
+  /* Button hover lift — x:0 y:2 blur:4 spread:0, rgba(0,0,0,.20). */
+  --gg-btn-shadow-hover: 0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.2);
 
   --gg-strip-bg: #f2f2f2;              /* [FIGMA] bottom sustainability strip bg */
   --gg-strip-text: #555555;            /* [FIGMA] strip text                     */
@@ -46,11 +45,24 @@
   --gg-popup-bg: #ffffff;              /* [FIGMA] quick-view card background     */
   --gg-popup-overlay: rgba(0, 0, 0, 0.5); /* [FIGMA] dimmer behind popup        */
 
+  /* Product option swatches: Color option VALUE → hex (Figma). JS slugifies the
+     value (e.g. "Grey" → grey) and paints the swatch with var(--gg-swatch-<slug>). */
+  --gg-swatch-blue: #0d499f;
+  --gg-swatch-grey: #afafb7;
+  --gg-swatch-gray: #afafb7;           /* alias for US spelling */
+  --gg-swatch-black: #000000;
+  --gg-swatch-red: #b20f36;
+  --gg-swatch-white: #ffffff;
+
   /* ── Typography ─────────────────────────────────────────────────────────
      Families default to the store's Dawn fonts; override if Figma uses a
      specific typeface. Sizes use clamp() so they scale between mobile↔desktop. */
-  --gg-font-heading: var(--font-heading-family, Georgia, serif);
-  --gg-font-body: var(--font-body-family, system-ui, sans-serif);
+  /* Figma fonts (loaded via Google Fonts, page-scoped). Almost everything is
+     Jost; Lustria is an accent used in only TWO places.
+       --gg-font-body   → hero title, hero copy, buttons, card text, labels
+       --gg-font-accent → Grid section title + product price (only) */
+  --gg-font-body: 'Jost', system-ui, sans-serif;
+  --gg-font-accent: 'Lustria', Georgia, serif;
 
   --gg-fs-hero: clamp(4rem, 8vw, 9.6rem);        /* [FIGMA] "The Gift Guide"     */
   --gg-fs-h2: 2.4rem;                            /* [FIGMA] popup product title  */
@@ -103,7 +115,7 @@
   --gg-dur: 0.25s;                     /* default transition duration            */
   --gg-dur-fast: 0.15s;                /* quick feedback (hover, focus)          */
   --gg-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --gg-btn-shift: 0.6rem;              /* [FIGMA] how far CTA/arrow slides on hover */
+  /* Button hover = color inversion + lift (see --gg-btn-shadow-hover). */
 }
 
 /* =============================================================================

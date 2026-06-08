@@ -1,0 +1,112 @@
+{% comment %}
+  Gift Guide — Banner section (built from scratch; no Dawn section is reused).
+
+  Layout skeleton:
+    .gift-banner__bar    top bar: logo · tagline · "Choose gift" button
+    .gift-banner__hero   headline · subcopy · "Shop now" button, over an
+                         optional line-art background image
+    .gift-banner__strip  full-width sustainability strip
+
+  All copy is editable in the Theme Customizer via the schema settings below
+  (satisfies "all text in red rectangles must be editable"). Visual design is
+  driven entirely by the tokens in gift-tokens.css.
+{% endcomment %}
+
+{%- comment -%} Page-scoped assets: tokens first, then this section's layout. {%- endcomment -%}
+{{ 'gift-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gift-banner.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} Figma fonts (Jost + Lustria) — loaded only where this section renders. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&family=Lustria&display=swap">
+
+{%- comment -%}
+  Customizer→token bridge: an optional accent color injected as an inline custom
+  property overrides the gift-tokens.css default. Demonstrates the pattern; add
+  more bridged settings the same way as the design firms up.
+{%- endcomment -%}
+<section
+  class="gift-banner"
+  id="gift-banner-{{ section.id }}"
+  {% if section.settings.accent_color != blank %}style="--gg-yellow: {{ section.settings.accent_color }};"{% endif %}
+>
+  <header class="gift-banner__bar">
+    {%- if section.settings.logo_text != blank -%}
+      <span class="gift-banner__logo">{{ section.settings.logo_text }}</span>
+    {%- endif -%}
+
+    {%- if section.settings.tagline != blank -%}
+      <p class="gift-banner__tagline">{{ section.settings.tagline }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.choose_gift_label != blank -%}
+      {% render 'gift-button',
+        label: section.settings.choose_gift_label,
+        url: section.settings.choose_gift_url,
+        variant: 'accent'
+      %}
+    {%- endif -%}
+  </header>
+
+  <div class="gift-banner__hero">
+    {%- if section.settings.background_image != blank -%}
+      <div class="gift-banner__bg" aria-hidden="true">
+        {{ section.settings.background_image | image_url: width: 1920 | image_tag: loading: 'lazy', alt: '' }}
+      </div>
+    {%- endif -%}
+
+    <div class="gift-banner__hero-content">
+      {%- if section.settings.headline != blank -%}
+        <h1 class="gift-banner__headline">{{ section.settings.headline }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subcopy != blank -%}
+        <p class="gift-banner__subcopy">{{ section.settings.subcopy }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.shop_now_label != blank -%}
+        {% render 'gift-button',
+          label: section.settings.shop_now_label,
+          url: section.settings.shop_now_url,
+          variant: 'invert'
+        %}
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.strip_text != blank -%}
+    <div class="gift-banner__strip">
+      <span class="gift-banner__strip-text">{{ section.settings.strip_text }}</span>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Gift Banner",
+  "tag": "section",
+  "class": "gift-banner-section",
+  "settings": [
+    { "type": "header", "content": "Top bar" },
+    { "type": "text", "id": "logo_text", "label": "Logo wordmark", "default": "TISSO VISON" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "choose_gift_label", "label": "\"Choose gift\" button label", "info": "Arrow is added automatically.", "default": "Choose gift" },
+    { "type": "url", "id": "choose_gift_url", "label": "\"Choose gift\" link" },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "subcopy", "label": "Sub-copy", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "shop_now_label", "label": "\"Shop now\" button label", "info": "Arrow is added automatically.", "default": "Shop now" },
+    { "type": "url", "id": "shop_now_url", "label": "\"Shop now\" link" },
+    { "type": "image_picker", "id": "background_image", "label": "Hero background illustration", "info": "Transparent line-art PNG/SVG, exported from Figma." },
+
+    { "type": "header", "content": "Sustainability strip" },
+    { "type": "text", "id": "strip_text", "label": "Strip text", "default": "Sustainable, ethically made clothes in sizes XXS to 6XL" },
+
+    { "type": "header", "content": "Color override (optional)" },
+    { "type": "color", "id": "accent_color", "label": "Accent (yellow)", "info": "Overrides --gg-yellow for this section. Leave empty to use the token default." }
+  ],
+  "presets": [{ "name": "Gift Banner" }]
+}
+{% endschema %}
