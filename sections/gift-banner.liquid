@@ -29,7 +29,7 @@
 <section
   class="gift-banner"
   id="gift-banner-{{ section.id }}"
-  {% if section.settings.accent_color != blank %}style="--gg-yellow: {{ section.settings.accent_color }};"{% endif %}
+  {% if section.settings.accent_color != blank %}style="--tv-yellow: {{ section.settings.accent_color }};"{% endif %}
 >
   <header class="gift-banner__bar">
     {%- if section.settings.logo_text != blank -%}
@@ -105,7 +105,7 @@
     { "type": "text", "id": "strip_text", "label": "Strip text", "default": "Sustainable, ethically made clothes in sizes XXS to 6XL" },
 
     { "type": "header", "content": "Color override (optional)" },
-    { "type": "color", "id": "accent_color", "label": "Accent (yellow)", "info": "Overrides --gg-yellow for this section. Leave empty to use the token default." }
+    { "type": "color", "id": "accent_color", "label": "Accent (yellow)", "info": "Overrides --tv-yellow for this section. Leave empty to use the token default." }
   ],
   "presets": [{ "name": "Gift Banner" }]
 }
