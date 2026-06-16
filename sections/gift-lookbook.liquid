@@ -1,24 +1,15 @@
 {% comment %}
-  Gift Guide — Lookbook section "Tisso vison in the wild" (built from scratch;
-  no Dawn section is reused).
+  Gift Guide — Lookbook "Tisso vison in the wild" (built from scratch).
 
-  A shoppable lifestyle gallery: a Lustria title over a 3×2 grid (2×3 on mobile)
-  of lifestyle photos. Each photo carries a round "+" tag at a designer-placed
-  spot; clicking it opens the SAME quick-view popup used by the product grid.
-
-  Quick view: this section owns the shared popup — it renders the popup markup
-  (snippets/gift-popup) once and loads its controller (assets/gift-popup.js).
-  The marker click is delegated from `document`, so every "+" tag below opens
-  it. Markers carry only the product HANDLE; price/variants are fetched live at
-  click time, never hardcoded.
-
-  Every red-rectangle value (title, each photo, its product, and the tag's X/Y
-  position) is editable in the Theme Customizer. Visual values are var(--tv-*)
-  tokens from gift-tokens.css.
+  A shoppable photo grid (3×2 desktop, 2×3 mobile). Each photo's "+" tag opens
+  the SHARED quick-view popup (this section renders snippets/gift-popup once +
+  loads assets/gift-popup.js; clicks delegated from document). Tags carry only
+  the product HANDLE — price/variants are fetched live, never hardcoded.
+  Heading, photos, products, and each tag's X/Y are all Customizer-editable.
 {% endcomment %}
 
-{%- comment -%} Page-scoped assets: tokens first, then this section + popup. {%- endcomment -%}
 {{ 'gift-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gift-button.css' | asset_url | stylesheet_tag }}
 {{ 'gift-lookbook.css' | asset_url | stylesheet_tag }}
 {{ 'gift-popup.css' | asset_url | stylesheet_tag }}
 
@@ -34,13 +25,9 @@
       <li class="gift-lookbook__item" {{ block.shopify_attributes }}>
         <div class="gift-lookbook__media">
           {%- comment -%}
-            Image source priority:
-            1. Customizer image_picker (per-block override) — wins for any viewport.
-            2. The tagged product's media (product.featured_image) — pulled live
-               from the product DB, so uploading to the product's Media in admin
-               is reflected here automatically.
-            3. Bundled Figma photo — last-resort fallback so the section still
-               matches the comp before any product/media exists.
+            Image source, in priority: (1) the block's image_picker override,
+            (2) the tagged product's featured_image (live from the product), else
+            (3) a bundled Figma photo so the section still matches the comp.
           {%- endcomment -%}
           {%- assign source_image = image | default: product.featured_image -%}
           {%- if source_image != blank -%}
@@ -67,15 +54,10 @@
           {%- endif -%}
 
           {%- comment -%}
-            "+" shop tag (Figma: #F8F8F8 90% circle + 1.5px plus), positioned
-            over the photo from the block's position ("X, Y" percent). The merchant
-            drags the tag in the Theme Customizer to set this (design-mode helper
-            copies the coordinates to paste back). Shown on every photo: with a
-            product it's a button that opens the quick view; otherwise decorative.
-
-            Position is one "X, Y" text field (e.g. "62, 56"). Spaces are stripped
-            then split on the comma; each axis falls back to a sensible centre so a
-            blank or half-filled value never breaks the inline style.
+            "+" shop tag at the block's "X, Y" percent (e.g. "62, 56"), centered
+            over the photo. With a product it's a button opening the quick view;
+            otherwise decorative. Spaces stripped, split on the comma; each axis
+            falls back to centre so a blank/partial value never breaks the style.
           {%- endcomment -%}
           {%- assign pos = block.settings.position | default: '60, 50' | replace: ' ', '' | split: ',' -%}
           {%- assign mx = pos[0] | default: '60' -%}
@@ -89,7 +71,7 @@
               data-gift-marker
               data-product-handle="{{ product.handle }}"
               aria-haspopup="dialog"
-              aria-label="{{ 'Quick view: ' | append: product.title }}"
+              aria-label="Quick view: {{ product.title | default: 'product' }}"
             >{{ marker_icon }}</button>
           {%- else -%}
             <span
@@ -108,18 +90,13 @@
   </ul>
 </section>
 
-{%- comment -%} Single shared quick-view modal, opened by every "+" tag above. {%- endcomment -%}
+{%- comment -%} Shared quick-view modal, opened by every "+" tag above. {%- endcomment -%}
 {% render 'gift-popup' %}
-
-{%- comment -%} Popup + Add-to-Cart logic (vanilla JS, deferred). {%- endcomment -%}
 <script src="{{ 'gift-popup.js' | asset_url }}" defer></script>
 
 {%- comment -%}
-  Marker placement helper — loaded ONLY in the Theme Customizer (never shipped to
-  shoppers). Lets the merchant drag a "+" tag over the photo; on release it copies
-  the "X, Y" percent so they can paste it into the block's Tag position field.
-  (Shopify offers no API to write a setting from the preview, so copy-paste is the
-  closest in-editor placement the platform allows.)
+  Marker placement helper — Customizer only (drag a "+" tag → copies its "X, Y"
+  to paste back). See assets/gift-marker-editor.js for the copy-paste rationale.
 {%- endcomment -%}
 {%- if request.design_mode -%}
   <script src="{{ 'gift-marker-editor.js' | asset_url }}" defer></script>
