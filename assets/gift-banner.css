@@ -148,10 +148,12 @@
   display: none;
 }
 
-/* Shop Now: only the fixed 220px width is hero-specific (Figma btn-shop_now).
-   Height, centred label and right-pinned arrow all come from .gift-button. */
+/* Shop Now: 220px wide and 50px tall — the one CTA taller than the shared 45px
+   (Figma btn-shop_now). Centred label + right-pinned arrow come from .gift-button.
+   On mobile it drops back to 45px (see the mobile block below). */
 .gift-banner__hero-content .gift-button {
   width: var(--tv-hero-btn-width);            /* 220px */
+  min-height: var(--tv-hero-btn-height);      /* 50px (all other CTAs are 45px) */
 }
 
 /* ── Sustainability strip ────────────────────────────────────────────────── */

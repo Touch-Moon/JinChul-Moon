@@ -91,12 +91,13 @@
   --tv-hero-inset-y: 5.1rem;           /* 51px text-group offset from bottom       */
   --tv-hero-subcopy-lh: 1.4;           /* Figma: sub-copy line-height              */
   --tv-hero-btn-width: 22rem;          /* 220px — hero Shop Now fixed width         */
+  --tv-hero-btn-height: 5rem;          /* 50px  — desktop hero Shop Now (taller CTA) */
 
   /* ── Shared CTA button (gift-button) ──────────────────────────────────────  */
-  /* Every gift-button is identical bar one thing: colour + label. Same height,
-     same centred label, same arrow pinned to the right. Only the width changes
-     per placement (hero 220 / popup full / bar auto), matching Figma.            */
-  --tv-btn-height: 5rem;               /* 50px  — shared height for all CTAs        */
+  /* Every gift-button shares one height + centred label + right-pinned arrow;
+     only the width (hero 220 / popup full / bar auto) and the desktop hero's
+     height differ, matching Figma.                                              */
+  --tv-btn-height: 4.5rem;             /* 45px  — shared height (desktop hero → 50) */
   --tv-btn-arrow-inset: 2.3rem;        /* 23px  — arrow gap from the right edge     */
   --tv-btn-arrow-size: 2.7rem;         /* 27px  — gift-arrow.svg natural width      */
 
