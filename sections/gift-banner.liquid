@@ -74,11 +74,17 @@
   </header>
 
   <div class="gift-banner__hero">
-    {%- if section.settings.background_image != blank -%}
-      <div class="gift-banner__bg" aria-hidden="true">
-        {{ section.settings.background_image | image_url: width: 1920 | image_tag: loading: 'lazy', alt: '' }}
-      </div>
-    {%- endif -%}
+    {%- comment -%}
+      Background line-art illustration. Defaults to the bundled Figma export
+      (bg_hero.svg); a Customizer image override wins when one is set.
+    {%- endcomment -%}
+    <div class="gift-banner__bg" aria-hidden="true">
+      {%- if section.settings.background_image != blank -%}
+        {{ section.settings.background_image | image_url: width: 2880 | image_tag: loading: 'eager', alt: '' }}
+      {%- else -%}
+        <img src="{{ 'bg_hero.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
+      {%- endif -%}
+    </div>
 
     <div class="gift-banner__hero-content">
       {%- if section.settings.headline != blank -%}

@@ -23,10 +23,13 @@
 
 {%- capture gb_inner -%}
   <span class="gift-button__label">{{ label }}</span>
-  {%- comment -%} Decorative arrow — hidden from assistive tech. {%- endcomment -%}
-  <svg class="gift-button__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
-  </svg>
+  {%- comment -%}
+    Decorative arrow (ico-arrow.svg) — hidden from assistive tech. Inlined so its
+    fill follows `currentColor` and inverts with the label on hover.
+  {%- endcomment -%}
+  <span class="gift-button__arrow" aria-hidden="true">
+    {{ 'ico-arrow.svg' | inline_asset_content }}
+  </span>
 {%- endcapture -%}
 
 {%- if url != blank -%}

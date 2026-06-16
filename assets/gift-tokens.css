@@ -66,17 +66,17 @@
   --tv-font-body: 'Jost', system-ui, sans-serif;
   --tv-font-accent: 'Lustria', Georgia, serif;
 
-  --tv-font-size-hero: clamp(4rem, 8vw, 9.6rem);        /* [FIGMA] "The Gift Guide"     */
+  --tv-font-size-hero: clamp(3rem, 5vw, 7rem);          /* Figma: "The Gift Guide" 70px desktop */
   --tv-font-size-h2: 2.4rem;                            /* [FIGMA] popup product title  */
-  --tv-font-size-subcopy: clamp(1.4rem, 2vw, 1.8rem);   /* [FIGMA] hero sub-copy        */
+  --tv-font-size-subcopy: clamp(1.6rem, 2vw, 2rem);     /* Figma: hero sub-copy 20px desktop */
   --tv-font-size-body: 1.6rem;                          /* [FIGMA] descriptions, base   */
   --tv-font-size-label: 1.2rem;                         /* [FIGMA] uppercase labels     */
 
-  --tv-font-weight-heading: 800;                /* [FIGMA] hero/headline weight           */
+  --tv-font-weight-heading: 500;                /* Figma: hero title is Jost Medium 500   */
   --tv-font-weight-bold: 700;                   /* [FIGMA] buttons, emphasis              */
   --tv-font-weight-body: 400;                   /* [FIGMA] body                           */
 
-  --tv-line-height-tight: 1.05;                 /* headlines                              */
+  --tv-line-height-tight: 1;                    /* Figma: hero title leading-none (1.0)   */
   --tv-line-height-body: 1.6;                   /* paragraphs                             */
   --tv-tracking-label: 0.1em;          /* [FIGMA] uppercase label letter-spacing */
   --tv-tracking-wide: 0.12em;          /* [FIGMA] strip / wide labels            */
@@ -94,6 +94,17 @@
   --tv-gutter: clamp(2rem, 5vw, 5rem);           /* horizontal page padding: 50px desktop, less on mobile */
   --tv-nav-height: 6.4rem;                       /* [FIGMA] top bar height (64px) */
   --tv-section-gap: clamp(6rem, 12vw, 24rem);    /* [FIGMA] gap between sections (Figma 240px) */
+
+  /* Hero (banner) — desktop layout, measured from Figma node 3:1125 (1440×780).
+     text-group sits lower-left: 67px from left, 51px from bottom; 50px between items. */
+  --tv-hero-height: 78rem;             /* 780px hero frame height                 */
+  --tv-hero-gap: 5rem;                 /* 50px between title / subcopy / button    */
+  --tv-hero-text-width: 48.3rem;       /* 483px text-group width (subcopy wrap)    */
+  --tv-hero-inset-x: 6.7rem;           /* 67px text-group offset from left         */
+  --tv-hero-inset-y: 5.1rem;           /* 51px text-group offset from bottom       */
+  --tv-hero-subcopy-lh: 1.4;           /* Figma: sub-copy line-height              */
+  --tv-hero-btn-width: 22rem;          /* 220px Shop Now button                    */
+  --tv-hero-btn-height: 5rem;          /* 50px  Shop Now button                    */
 
   /* ── Grid (Grid section) ────────────────────────────────────────────────  */
   --tv-grid-cols: 3;                   /* [FIGMA] desktop columns (6 = 3×2)      */
@@ -117,6 +128,7 @@
      gift-popup.css / gift-banner.css honor prefers-reduced-motion separately.  */
   --tv-duration: 0.25s;                     /* default transition duration            */
   --tv-duration-fast: 0.15s;                /* quick feedback (hover, focus)          */
+  --tv-btn-duration: 0.5s;                  /* button hover wipe/colour sweep (Figma) */
   --tv-ease: cubic-bezier(0.4, 0, 0.2, 1);
   /* Button hover = color inversion + lift (see --tv-btn-shadow-hover). */
 }
