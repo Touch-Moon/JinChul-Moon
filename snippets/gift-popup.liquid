@@ -24,45 +24,80 @@
       </svg>
     </button>
 
-    <div class="gift-popup__media">
-      <img class="gift-popup__image" data-gift-popup-image src="" alt="" />
+    {%- comment -%} Header: square thumbnail (left) + title / price / description. {%- endcomment -%}
+    <div class="gift-popup__head">
+      <div class="gift-popup__media">
+        <img class="gift-popup__image" data-gift-popup-image src="" alt="" width="123" height="142" />
+      </div>
+      <div class="gift-popup__info">
+        <h2 class="gift-popup__title" id="gift-popup-title" data-gift-popup-title></h2>
+        <div class="gift-popup__body">
+          <p class="gift-popup__price" data-gift-popup-price></p>
+          <div class="gift-popup__description" data-gift-popup-description></div>
+        </div>
+      </div>
     </div>
 
-    <div class="gift-popup__body">
-      <h2 class="gift-popup__title" id="gift-popup-title" data-gift-popup-title></h2>
-      <p class="gift-popup__price" data-gift-popup-price></p>
-      <div class="gift-popup__description" data-gift-popup-description></div>
+    {%- comment -%}
+      Color — built from scratch per Figma "Component 208–210", placed directly
+      below the header. A "Color" label, a segmented track of options (each cell:
+      a left colour-swatch bar + the value name), and a single black layer that
+      SLIDES to the chosen cell while that cell's label inverts to white. The
+      options and the slide state (--color-count / --color-i) are filled by JS
+      from the product's "Color" option values; the control drives the shared
+      controller state, so it sits outside <form> by design (buttons, not inputs).
+    {%- endcomment -%}
+    <div class="gift-popup__options">
+      <div class="gift-popup__color" data-gift-popup-colors hidden>
+        <span class="gift-popup__color-label">Color</span>
+        <div class="gift-popup__color-options" data-gift-popup-swatches role="radiogroup" aria-label="Color"></div>
+        <span class="gift-popup__color-indicator" data-gift-popup-color-indicator aria-hidden="true"></span>
+      </div>
 
-      <form class="gift-popup__form" data-gift-popup-form>
-        {%- comment -%} Color: swatch buttons (one option group). Built by JS. {%- endcomment -%}
-        <fieldset class="gift-popup__option" data-gift-popup-colors hidden>
-          <legend class="gift-popup__option-label">Color</legend>
-          <div class="gift-popup__swatches" data-gift-popup-swatches></div>
-        </fieldset>
-
-        {%- comment -%} Size: native select (accessible, mobile-friendly). {%- endcomment -%}
-        <fieldset class="gift-popup__option" data-gift-popup-sizes hidden>
-          <legend class="gift-popup__option-label">Size</legend>
-          <div class="gift-popup__select-wrap">
-            <select class="gift-popup__select" data-gift-popup-size aria-label="Choose your size">
-              <option value="" disabled selected>Choose your size</option>
-            </select>
-          </div>
-        </fieldset>
-
-        <p class="gift-popup__notice" data-gift-popup-notice role="status" aria-live="polite" hidden></p>
-
-        <button
-          type="submit"
-          class="gift-button gift-button--invert gift-popup__add"
-          data-gift-popup-add
-        >
-          <span class="gift-button__label">Add to cart</span>
-          <svg class="gift-button__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
-          </svg>
-        </button>
-      </form>
+      {%- comment -%}
+        Size: a custom listbox (Figma Component 212/213) — a trigger styled like
+        the select, with an options panel that drops directly below it. JS fills
+        the <ul> and manages open/selection so we fully control the dropdown
+        (chevron, click-away, styling) without the native picker's limits.
+      {%- endcomment -%}
+      <div class="gift-popup__option" data-gift-popup-sizes hidden>
+        <span class="gift-popup__option-label" id="gift-popup-size-label">Size</span>
+        <div class="gift-popup__select-wrap" data-gift-popup-size-wrap>
+          <button
+            type="button"
+            class="gift-popup__select"
+            data-gift-popup-size-trigger
+            role="combobox"
+            aria-haspopup="listbox"
+            aria-controls="gift-popup-size-listbox"
+            aria-expanded="false"
+            aria-labelledby="gift-popup-size-label"
+          >
+            <span class="gift-popup__select-value" data-gift-popup-size-value>Choose your size</span>
+          </button>
+          <span class="gift-popup__chevron" aria-hidden="true">
+            {{- 'arrow-down.svg' | inline_asset_content -}}
+          </span>
+          <ul
+            class="gift-popup__size-list"
+            id="gift-popup-size-listbox"
+            data-gift-popup-size-list
+            role="listbox"
+            aria-labelledby="gift-popup-size-label"
+            hidden
+          ></ul>
+        </div>
+      </div>
     </div>
+
+    <p class="gift-popup__notice" data-gift-popup-notice role="status" aria-live="polite" hidden></p>
+
+    {% render 'gift-button',
+      label: 'Add to cart',
+      variant: 'invert',
+      type: 'button',
+      class: 'gift-popup__add',
+      attributes: 'data-gift-popup-add'
+    %}
   </div>
 </div>
