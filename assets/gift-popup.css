@@ -33,10 +33,10 @@ body.gift-popup-open { overflow: hidden; }
   flex-direction: column;
   /* Figma card is 307px; min() lets it shrink to fit narrow phones (<355px
      incl. the .gift-popup padding) instead of overflowing horizontally. */
-  width: min(307px, 100%);
+  width: min(30.7rem, 100%);           /* Figma card 307px */
   max-height: 90vh;
   overflow: auto;
-  padding: 36px 18px 25px;
+  padding: 3.6rem 1.8rem 2.5rem;       /* Figma 36 / 18 / 25 */
   background: var(--tv-popup-bg);
   border-radius: var(--tv-radius-popup);
   box-shadow: var(--tv-shadow-popup);
@@ -69,19 +69,19 @@ body.gift-popup-open { overflow: hidden; }
 /* ── Header: thumbnail + product info ───────────────────────────────────────*/
 .gift-popup__head {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: flex-start;
   padding-right: 0;
 }
 
 .gift-popup__media {
-  flex: 0 0 120px;
-  width: 120px;
-  height: 140px;
+  flex: 0 0 12rem;                      /* Figma 120px */
+  width: 12rem;
+  height: 14rem;                       /* Figma 140px */
   overflow: hidden;
   background: var(--tv-border);
 }
-.gift-popup__image { width: 120px; height: 140px; object-fit: cover; display: block; }
+.gift-popup__image { width: 12rem; height: 14rem; object-fit: cover; display: block; }
 
 .gift-popup__info {
   flex: 1;
@@ -93,8 +93,8 @@ body.gift-popup-open { overflow: hidden; }
 .gift-popup__body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 1.2rem;
+  margin-top: 2rem;
 }
 
 .gift-popup__title {
@@ -138,7 +138,7 @@ body.gift-popup-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: var(--tv-space-3);
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 .gift-popup__option { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
@@ -366,7 +366,7 @@ body.gift-popup-open { overflow: hidden; }
    Everything else (height, arrow, hover) comes from .gift-button. */
 .gift-popup__add {
   width: 100%;
-  margin-top: 51px;
+  margin-top: 5.1rem;                  /* Figma 51px gap above the CTA */
 }
 
 @media (prefers-reduced-motion: reduce) {
