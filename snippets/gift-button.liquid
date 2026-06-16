@@ -1,8 +1,6 @@
 {% comment %}
-  gift-button — shared CTA used by the banner and the popup's Add to Cart.
-  Renders an <a> when `url` is provided, otherwise a <button>. Every gift
-  button is uppercase (CSS) with an automatic trailing arrow, so editors
-  type plain label text and never the "→".
+  gift-button — shared CTA (banner + popup's Add to Cart). Renders an <a> when
+  `url` is set, else a <button>. Uppercase with an auto trailing arrow (CSS).
 
   Params:
     label      {string}  required — visible text (no arrow; it is added here)
@@ -34,11 +32,11 @@
 {%- capture gb_inner -%}
   <span class="gift-button__label">{{ label }}</span>
   {%- comment -%}
-    Decorative arrow (ico-arrow.svg) — hidden from assistive tech. Inlined so its
-    fill follows `currentColor` and inverts with the label on hover.
+    Decorative arrow — inlined so its fill follows currentColor and inverts
+    with the label on hover.
   {%- endcomment -%}
   <span class="gift-button__arrow" aria-hidden="true">
-    {{ 'ico-arrow.svg' | inline_asset_content }}
+    {{ 'gift-arrow.svg' | inline_asset_content }}
   </span>
 {%- endcapture -%}
 

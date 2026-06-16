@@ -2,8 +2,8 @@
    GIFT LOOKBOOK — "Tisso vison in the wild"
    -----------------------------------------------------------------------------
    Lustria title + a shoppable photo grid (3×2 desktop, 2×3 mobile). The "+" tag
-   reuses the grid's quick-view popup (assets/gift-grid.js). Layout/structure
-   only; every visual value is a var(--tv-*) token from gift-tokens.css.
+   opens the shared quick-view popup (assets/gift-popup.js). Layout only; visuals
+   come from var(--tv-*) tokens in gift-tokens.css.
    ============================================================================= */
 
 .gift-lookbook {
@@ -51,12 +51,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.gift-lookbook__image--placeholder {
-  object-fit: contain;
-  padding: var(--tv-space-5);
-  background: var(--tv-border);
 }
 
 /* "+" shop tag (Figma: #F8F8F8 90% circle + thin 1.5px plus) — placed from the
