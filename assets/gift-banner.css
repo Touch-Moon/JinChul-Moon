@@ -157,7 +157,9 @@
 .gift-banner__menu-toggle {
   display: none;
 }
-.gift-banner__nav {
+.gift-banner__nav,
+.gift-banner__nav-inner,
+.gift-banner__nav-content {
   display: contents;
 }
 
@@ -200,6 +202,9 @@
   z-index: 0;
   pointer-events: none;
 }
+.gift-banner__bg picture {
+  display: contents;             /* let the <img> be the direct sized child */
+}
 .gift-banner__bg img {
   width: 100%;
   height: 100%;
@@ -239,13 +244,25 @@
   line-height: var(--tv-hero-subcopy-lh);     /* 1.4 */
   color: var(--tv-black);                     /* Figma: #000, not muted */
 }
+/* Figma shows the full sub-copy on desktop, a shorter one on mobile. */
+.gift-banner__subcopy--mobile {
+  display: none;
+}
 
-/* Shop Now: fixed 220×50 with the label + arrow centered (Figma btn-shop_now). */
+/* Shop Now: fixed 220×50 (Figma btn-shop_now). The arrow is pinned to the right
+   (~23px from the edge → 170–197px) and the label is centered in the space to its
+   left (→ 55–142px), reproducing the component's label-44.7% / arrow-83.5% layout. */
 .gift-banner__hero-content .gift-button {
   width: var(--tv-hero-btn-width);            /* 220px */
   min-height: var(--tv-hero-btn-height);      /* 50px  */
   justify-content: center;
-  padding-block: 0;
+  padding: 0 2.3rem 0 0;                       /* right pad = arrow zone, centers label */
+}
+.gift-banner__hero-content .gift-button__arrow {
+  position: absolute;
+  right: 2.3rem;                               /* arrow right edge ~23px from button edge */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* ── Sustainability strip ────────────────────────────────────────────────── */
@@ -263,13 +280,18 @@
 
 /* ── Mobile (< 750px) ────────────────────────────────────────────────────── */
 @media screen and (max-width: 749px) {
-  /* Figma mobile: hamburger (left) + centered logo. The tagline + Choose Gift
-     drop into a collapsible panel below the bar, toggled by the hamburger. */
+  /* Figma mobile (Component 189): a #f7f7f7 bar with a soft drop shadow holds the
+     hamburger (left, 16px) + centered logo. The tagline + Choose Gift live in a
+     collapsible #f2f2f2 panel below — the open variant (Group 1000008120). */
+  .gift-banner__bar {
+    background-color: #f7f7f7;        /* Figma: mobile bar (lighter than desktop) */
+  }
   .gift-banner__bar-inner {
     position: relative;
     flex-wrap: wrap;
     justify-content: center;
-    row-gap: var(--tv-space-4);
+    row-gap: 0;
+    padding-inline: 0;               /* let the panel span full-bleed */
   }
 
   .gift-banner__menu-toggle {
@@ -277,8 +299,9 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    left: var(--tv-gutter);
+    left: 1.6rem;                    /* Figma: 16px from the edge */
     top: 0;
+    z-index: 2;
     height: var(--tv-nav-height);
     width: 2.4rem;
     padding: 0;
@@ -301,30 +324,109 @@
     display: inline;
   }
 
-  /* Logo occupies the full first row, centered, at the 64px bar height. */
+  /* Logo row: full width, centered, 64px tall. */
   .gift-banner__logo {
     flex-basis: 100%;
     justify-content: center;
     min-height: var(--tv-nav-height);
   }
 
-  /* Collapsible panel — closed by default, revealed when the bar is --open. */
+  /* Open-menu panel (Group 1000008120). It slides down like a blind: the outer
+     animates its grid row from 0fr → 1fr (revealing to the content's true
+     height), while the inner clips the overflow during the reveal. */
   .gift-banner__nav {
-    display: none;
+    display: grid;
+    grid-template-rows: 0fr;
     flex-basis: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--tv-space-4);
-    padding-bottom: var(--tv-space-5);
+    transition: grid-template-rows 0.4s var(--tv-ease);
   }
   .gift-banner__bar--open .gift-banner__nav {
+    grid-template-rows: 1fr;
+  }
+  /* Pure clipper — a real box (overrides the desktop display:contents) with no
+     padding, so the grid row collapses all the way to 0. */
+  .gift-banner__nav-inner {
+    display: block;
+    overflow: hidden;
+  }
+  /* Visual panel — padding + bg sit INSIDE the clipper so they roll away too. */
+  .gift-banner__nav-content {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;                     /* Figma: 16px tagline ↔ button */
+    padding: 2.5rem 1.8rem;          /* Figma: 25px top/bottom */
+    background-color: #f2f2f2;       /* Figma: panel bg (darker than bar) */
+    text-align: center;
+  }
+  /* Choose Gift is a wider 244×44 button inside the panel (Figma). */
+  .gift-banner__nav-content .gift-button {
+    width: 24.4rem;                  /* Figma: 244px (height 44 from the bar rule) */
+  }
+
+  /* ── Hero (mobile) — Figma frame 3:1629 (375×421) ────────────────────────
+     Everything centers; headline + sub-copy sit at the top, Shop Now drops to
+     the bottom. Type sizes come from the clamp tokens (30px / 16px here).      */
+  .gift-banner__hero {
+    min-height: 42.1rem;             /* 421px mobile hero */
+  }
+  /* Figma mobile keeps the illustration to the LOWER band so the headline +
+     sub-copy sit on clean white; pin the background to the bottom ~68%.        */
+  .gift-banner__bg {
+    inset: auto 0 0 0;               /* bottom-anchored, full width */
+    height: 55%;                     /* lower band — clears the headline + sub-copy */
+    min-height: 26.4rem;             /* never below the mobile art's 264px height */
+    max-width: none;
+  }
+  .gift-banner__bg img {
+    object-position: center top;
+  }
+  .gift-banner__hero-content {
+    align-items: center;             /* center (overrides desktop left)   */
+    justify-content: flex-start;     /* headline group at the top          */
+    gap: 2.4rem;                     /* ~24px headline ↔ sub-copy          */
+    padding: 4.9rem 1.8rem 3.9rem;   /* Figma: top 49, sides ~18, bottom 39 */
+    text-align: center;
+    max-width: none;
+  }
+  .gift-banner__headline,
+  .gift-banner__subcopy {
+    max-width: 34rem;                /* ~340px column */
+  }
+  .gift-banner__subcopy {
+    line-height: 1.3;                /* Figma mobile sub-copy */
+  }
+  .gift-banner__subcopy--desktop {
+    display: none;
+  }
+  .gift-banner__subcopy--mobile {
+    display: block;
+  }
+  /* Shop Now — Figma 193×45 (hug). Fixed 45px height; the label sits in a 119px
+     box so the button hugs to 20+119+10+24+20 = 193px. Arrow inline after it. */
+  .gift-banner__hero-content > .gift-button {
+    width: auto;                     /* hug → ~193px */
+    height: 4.5rem;                  /* 45px (replaces padded height) */
+    min-height: 0;
+    margin-top: auto;                /* push to the bottom of the hero */
+    padding: 0 2rem;                 /* 20px sides; height handles vertical */
+    gap: 1rem;                       /* 10px label ↔ arrow */
+  }
+  .gift-banner__hero-content > .gift-button .gift-button__label {
+    min-width: 11.9rem;              /* Figma 119px text box, centered */
+    text-align: center;
+  }
+  .gift-banner__hero-content .gift-button__arrow {
+    position: static;                /* undo desktop absolute-right */
+    transform: none;
+    width: 2.4rem;                   /* 24px on mobile */
   }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .gift-button {
+  .gift-button,
+  .gift-banner__nav {
     transition: none;
   }
 }

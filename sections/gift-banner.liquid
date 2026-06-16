@@ -56,33 +56,46 @@
         </span>
       {%- endif -%}
 
-      {%- comment -%} Inline on desktop (display:contents); collapsible panel on mobile. {%- endcomment -%}
+      {%- comment -%}
+        Inline on desktop (nav + nav-inner are display:contents, so the tagline
+        and button sit directly in the bar). On mobile this is the slide-down
+        panel: the outer animates grid-rows 0fr→1fr, the inner clips with overflow.
+      {%- endcomment -%}
       <div class="gift-banner__nav" id="gift-nav-panel-{{ section.id }}">
-        {%- if section.settings.tagline != blank -%}
-          <p class="gift-banner__tagline">{{ section.settings.tagline }}</p>
-        {%- endif -%}
+        <div class="gift-banner__nav-inner">
+          <div class="gift-banner__nav-content">
+            {%- if section.settings.tagline != blank -%}
+              <p class="gift-banner__tagline">{{ section.settings.tagline }}</p>
+            {%- endif -%}
 
-        {%- if section.settings.choose_gift_label != blank -%}
-          {% render 'gift-button',
-            label: section.settings.choose_gift_label,
-            url: section.settings.choose_gift_url,
-            variant: 'accent'
-          %}
-        {%- endif -%}
+            {%- if section.settings.choose_gift_label != blank -%}
+              {% render 'gift-button',
+                label: section.settings.choose_gift_label,
+                url: section.settings.choose_gift_url,
+                variant: 'accent'
+              %}
+            {%- endif -%}
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
   <div class="gift-banner__hero">
     {%- comment -%}
-      Background line-art illustration. Defaults to the bundled Figma export
-      (bg_hero.svg); a Customizer image override wins when one is set.
+      Background line-art illustration. Defaults to the bundled Figma exports —
+      art-directed per viewport (mobile crop < 750px, full desktop above) so the
+      browser fetches only the matching SVG. A Customizer image override, when
+      set, wins for every viewport.
     {%- endcomment -%}
     <div class="gift-banner__bg" aria-hidden="true">
       {%- if section.settings.background_image != blank -%}
         {{ section.settings.background_image | image_url: width: 2880 | image_tag: loading: 'eager', alt: '' }}
       {%- else -%}
-        <img src="{{ 'bg_hero.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
+        <picture>
+          <source media="(max-width: 749px)" srcset="{{ 'bg-mobile-hero.svg' | asset_url }}" width="375" height="264">
+          <img src="{{ 'bg_hero.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
+        </picture>
       {%- endif -%}
     </div>
 
@@ -91,8 +104,13 @@
         <h1 class="gift-banner__headline">{{ section.settings.headline }}</h1>
       {%- endif -%}
 
+      {%- comment -%} Figma shows a shorter sub-copy on mobile; render both, CSS picks one. {%- endcomment -%}
       {%- if section.settings.subcopy != blank -%}
-        <p class="gift-banner__subcopy">{{ section.settings.subcopy }}</p>
+        <p class="gift-banner__subcopy gift-banner__subcopy--desktop">{{ section.settings.subcopy }}</p>
+      {%- endif -%}
+      {%- assign subcopy_mobile = section.settings.subcopy_mobile | default: section.settings.subcopy -%}
+      {%- if subcopy_mobile != blank -%}
+        <p class="gift-banner__subcopy gift-banner__subcopy--mobile">{{ subcopy_mobile }}</p>
       {%- endif -%}
 
       {%- if section.settings.shop_now_label != blank -%}
@@ -130,6 +148,7 @@
     { "type": "header", "content": "Hero" },
     { "type": "text", "id": "headline", "label": "Headline", "default": "The Gift Guide" },
     { "type": "textarea", "id": "subcopy", "label": "Sub-copy", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "textarea", "id": "subcopy_mobile", "label": "Sub-copy (mobile)", "info": "Shorter copy shown on mobile. Leave empty to reuse the full sub-copy.", "default": "Discover Joy: Your Ultimate Holiday Gift Destination." },
     { "type": "text", "id": "shop_now_label", "label": "\"Shop now\" button label", "info": "Arrow is added automatically.", "default": "Shop now" },
     { "type": "url", "id": "shop_now_url", "label": "\"Shop now\" link" },
     { "type": "image_picker", "id": "background_image", "label": "Hero background illustration", "info": "Transparent line-art PNG/SVG, exported from Figma." },
