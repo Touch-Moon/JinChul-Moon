@@ -266,16 +266,26 @@
 }
 
 /* ── Sustainability strip ────────────────────────────────────────────────── */
+/* Figma 1:1612 — #f5f5f5 bar, 10px vertical / 50px horizontal padding,
+   flex center both axes, Jost Regular 16px black, all-caps. */
 .gift-banner__strip {
-  padding: var(--tv-space-3) var(--tv-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem var(--tv-gutter);
   background-color: var(--tv-strip-bg);
   color: var(--tv-strip-text);
-  text-align: center;
 }
 .gift-banner__strip-text {
-  font-size: var(--tv-font-size-label);
-  letter-spacing: var(--tv-tracking-wide);
+  font-size: var(--tv-font-size-body);
+  font-weight: var(--tv-font-weight-body);
+  line-height: 1.4rem;             /* Figma leading ~13.4px; 14px + 10px×2 pad = 34px strip */
+  text-align: center;
   text-transform: uppercase;
+}
+/* Figma shows the full line on desktop, a shorter one on mobile. */
+.gift-banner__strip-text--mobile {
+  display: none;
 }
 
 /* ── Mobile (< 750px) ────────────────────────────────────────────────────── */
@@ -420,6 +430,19 @@
     position: static;                /* undo desktop absolute-right */
     transform: none;
     width: 2.4rem;                   /* 24px on mobile */
+  }
+
+  /* Strip (mobile) — Figma 1:1812. Same #f5f5f5 bar / 10px pad / black caps;
+     only the type drops 16px → 14px (line-height stays 14px so the bar holds
+     its 34px height: 10 + 14 + 10) and the shorter mobile line shows. */
+  .gift-banner__strip-text {
+    font-size: 1.4rem;
+  }
+  .gift-banner__strip-text--desktop {
+    display: none;
+  }
+  .gift-banner__strip-text--mobile {
+    display: block;
   }
 }
 

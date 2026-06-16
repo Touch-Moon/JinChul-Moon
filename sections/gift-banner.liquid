@@ -123,9 +123,16 @@
     </div>
   </div>
 
-  {%- if section.settings.strip_text != blank -%}
+  {%- comment -%} Figma shows a different (shorter) strip line on mobile; render both, CSS picks one. {%- endcomment -%}
+  {%- assign strip_text_mobile = section.settings.strip_text_mobile | default: section.settings.strip_text -%}
+  {%- if section.settings.strip_text != blank or strip_text_mobile != blank -%}
     <div class="gift-banner__strip">
-      <span class="gift-banner__strip-text">{{ section.settings.strip_text }}</span>
+      {%- if section.settings.strip_text != blank -%}
+        <span class="gift-banner__strip-text gift-banner__strip-text--desktop">{{ section.settings.strip_text }}</span>
+      {%- endif -%}
+      {%- if strip_text_mobile != blank -%}
+        <span class="gift-banner__strip-text gift-banner__strip-text--mobile">{{ strip_text_mobile }}</span>
+      {%- endif -%}
     </div>
   {%- endif -%}
 </section>
@@ -155,6 +162,7 @@
 
     { "type": "header", "content": "Sustainability strip" },
     { "type": "text", "id": "strip_text", "label": "Strip text", "default": "Sustainable, ethically made clothes in sizes XXS to 6XL" },
+    { "type": "text", "id": "strip_text_mobile", "label": "Strip text (mobile)", "info": "Shorter copy shown on mobile. Leave empty to reuse the strip text.", "default": "Sustainable, ethically made activewear" },
 
     { "type": "header", "content": "Color override (optional)" },
     { "type": "color", "id": "accent_color", "label": "Accent (yellow)", "info": "Overrides --tv-yellow for this section. Leave empty to use the token default." }

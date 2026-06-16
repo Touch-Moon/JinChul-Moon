@@ -38,8 +38,8 @@
 
   --tv-nav-bg: #f5f5f5;                /* [FIGMA] top bar (nav) background        */
 
-  --tv-strip-bg: #f2f2f2;              /* [FIGMA] bottom sustainability strip bg */
-  --tv-strip-text: #555555;            /* [FIGMA] strip text                     */
+  --tv-strip-bg: #f5f5f5;              /* [FIGMA] bottom sustainability strip bg */
+  --tv-strip-text: #000000;            /* [FIGMA] strip text                     */
 
   --tv-marker-bg: #ffffff;             /* [FIGMA] grid "+" circle background     */
   --tv-marker-text: #000000;           /* [FIGMA] grid "+" glyph                 */
