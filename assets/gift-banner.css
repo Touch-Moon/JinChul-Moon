@@ -211,6 +211,16 @@
     color: var(--tv-text);
     cursor: pointer;
   }
+  /* Tap/click shows no box; keep the ring for keyboard nav only (Dawn's global
+     focus outline is too large around the X icon). */
+  .gift-banner__menu-toggle:focus:not(:focus-visible) {
+    outline: 0;
+    box-shadow: none;
+  }
+  .gift-banner__menu-toggle:focus-visible {
+    outline: 2px solid var(--tv-text);
+    outline-offset: 2px;
+  }
   .gift-banner__menu-icon {
     width: 2.4rem;
     height: 2.4rem;
