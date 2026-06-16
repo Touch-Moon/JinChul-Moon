@@ -9,24 +9,25 @@
         "headline": "The Gift Guide",
         "subcopy": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
         "shop_now_label": "Shop now",
-        "strip_text": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+        "strip_text": "Sustainable, ethically made clothes in sizes XXS to 6XL",
+        "strip_text_mobile": "Sustainable, ethically made activewear"
       }
     },
-    "gift-grid": {
-      "type": "gift-grid",
+    "gift-lookbook": {
+      "type": "gift-lookbook",
       "blocks": {
-        "p1": { "type": "product", "settings": {} },
-        "p2": { "type": "product", "settings": {} },
-        "p3": { "type": "product", "settings": {} },
-        "p4": { "type": "product", "settings": {} },
-        "p5": { "type": "product", "settings": {} },
-        "p6": { "type": "product", "settings": {} }
+        "s1": { "type": "spot", "settings": { "product": "orange-wide-leg", "position": "60, 56" } },
+        "s2": { "type": "spot", "settings": { "product": "tailored-jacket", "position": "83, 50" } },
+        "s3": { "type": "spot", "settings": { "product": "accordion-pleated-dress", "position": "63, 20" } },
+        "s4": { "type": "spot", "settings": { "product": "green-trench-coat", "position": "72, 20" } },
+        "s5": { "type": "spot", "settings": { "product": "tennis-blue-t-shirt", "position": "52, 25" } },
+        "s6": { "type": "spot", "settings": { "product": "long-sleeve-tennis-top", "position": "75, 40" } }
       },
-      "block_order": ["p1", "p2", "p3", "p4", "p5", "p6"],
+      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6"],
       "settings": {
-        "heading": ""
+        "heading": "Tisso vison in the wild"
       }
     }
   },
-  "order": ["gift-banner", "gift-grid"]
+  "order": ["gift-banner", "gift-lookbook"]
 }

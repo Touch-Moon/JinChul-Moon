@@ -38,14 +38,16 @@
 
   --tv-nav-bg: #f5f5f5;                /* [FIGMA] top bar (nav) background        */
 
-  --tv-strip-bg: #f2f2f2;              /* [FIGMA] bottom sustainability strip bg */
-  --tv-strip-text: #555555;            /* [FIGMA] strip text                     */
+  --tv-strip-bg: #f5f5f5;              /* [FIGMA] bottom sustainability strip bg */
+  --tv-strip-text: #000000;            /* [FIGMA] strip text                     */
 
   --tv-marker-bg: #ffffff;             /* [FIGMA] grid "+" circle background     */
   --tv-marker-text: #000000;           /* [FIGMA] grid "+" glyph                 */
 
   --tv-popup-bg: #ffffff;              /* [FIGMA] quick-view card background     */
   --tv-popup-overlay: rgba(0, 0, 0, 0.5); /* [FIGMA] dimmer behind popup        */
+  --tv-popup-label: #333333;           /* [FIGMA] "Color"/"Size" field labels    */
+  --tv-popup-hairline: #000000;        /* [FIGMA] option box 0.5px borders       */
 
   /* Product option swatches: Color option VALUE → hex (Figma). JS slugifies the
      value (e.g. "Grey" → grey) and paints the swatch with var(--tv-swatch-<slug>). */
@@ -72,6 +74,7 @@
   --tv-font-size-body: 1.6rem;                          /* [FIGMA] descriptions, base   */
   --tv-font-size-label: 1.2rem;                         /* [FIGMA] uppercase labels     */
 
+  --tv-font-weight-light: 300;                  /* Figma: popup title/description Jost Light */
   --tv-font-weight-heading: 500;                /* Figma: hero title is Jost Medium 500   */
   --tv-font-weight-bold: 700;                   /* [FIGMA] buttons, emphasis              */
   --tv-font-weight-body: 400;                   /* [FIGMA] body                           */
@@ -103,8 +106,15 @@
   --tv-hero-inset-x: 6.7rem;           /* 67px text-group offset from left         */
   --tv-hero-inset-y: 5.1rem;           /* 51px text-group offset from bottom       */
   --tv-hero-subcopy-lh: 1.4;           /* Figma: sub-copy line-height              */
-  --tv-hero-btn-width: 22rem;          /* 220px Shop Now button                    */
-  --tv-hero-btn-height: 5rem;          /* 50px  Shop Now button                    */
+  --tv-hero-btn-width: 22rem;          /* 220px — hero Shop Now fixed width         */
+
+  /* ── Shared CTA button (gift-button) ──────────────────────────────────────  */
+  /* Every gift-button is identical bar one thing: colour + label. Same height,
+     same centred label, same arrow pinned to the right. Only the width changes
+     per placement (hero 220 / popup full / bar auto), matching Figma.            */
+  --tv-btn-height: 5rem;               /* 50px  — shared height for all CTAs        */
+  --tv-btn-arrow-inset: 2.3rem;        /* 23px  — arrow gap from the right edge     */
+  --tv-btn-arrow-size: 2.7rem;         /* 27px  — ico-arrow.svg natural width       */
 
   /* ── Grid (Grid section) ────────────────────────────────────────────────  */
   --tv-grid-cols: 3;                   /* [FIGMA] desktop columns (6 = 3×2)      */
@@ -116,10 +126,27 @@
   --tv-marker-size: 4rem;              /* [FIGMA] "+" circle diameter            */
   --tv-marker-offset: 1.6rem;          /* [FIGMA] inset of "+" from card edge    */
 
+  /* ── Lookbook ("Tisso vison in the wild") ───────────────────────────────────
+     Figma desktop frame 1:1662 (3×2, 433×444 photos, 20px gap, 36px Lustria
+     title) and mobile 1:1946 (2×3, 169×186px photos, 4px gap, 24px title). */
+  --tv-wild-pad-top: 9rem;             /* 90px strip → lookbook gap (desktop)    */
+  --tv-wild-pad-top-mobile: 4rem;      /* 40px strip → lookbook gap (mobile)     */
+  --tv-wild-title-size: clamp(2.4rem, 1.7rem + 1.6vw, 3.6rem); /* 24px → 36px   */
+  --tv-wild-cols: 3;                   /* desktop columns (3×2)                  */
+  --tv-wild-cols-mobile: 2;            /* mobile columns (2×3)                   */
+  --tv-wild-gap: 2rem;                 /* 20px between photos (desktop)          */
+  --tv-wild-gap-mobile: 0.4rem;        /* 4px between photos (mobile)            */
+  --tv-wild-head-gap: 3rem;            /* 30px title → grid (desktop)            */
+  --tv-wild-ratio: 433 / 444;          /* desktop photo ratio (~0.975)           */
+  --tv-wild-ratio-mobile: 169 / 186.42;/* mobile photo ratio (~0.907)            */
+  --tv-wild-marker-size: 2.2rem;       /* 22px "+" tag (desktop)                 */
+  --tv-wild-marker-size-mobile: 1.6rem;/* ~15.7px "+" tag (mobile)               */
+  --tv-wild-marker-bg: rgba(248, 248, 248, 0.9); /* Figma circle #F8F8F8 @ 90%   */
+
   /* ── Shape & elevation ──────────────────────────────────────────────────  */
   --tv-radius: 0rem;                   /* [FIGMA] generic corner radius          */
   --tv-radius-pill: 3rem;              /* [FIGMA] yellow pill button radius      */
-  --tv-radius-popup: 0.8rem;           /* [FIGMA] quick-view card radius         */
+  --tv-radius-popup: 0rem;           /* [FIGMA] quick-view card radius         */
   --tv-border-width: 0.1rem;
   --tv-shadow-popup: 0 2rem 6rem rgba(0, 0, 0, 0.2); /* [FIGMA] popup elevation  */
 

@@ -1,0 +1,164 @@
+{% comment %}
+  Gift Guide — Lookbook section "Tisso vison in the wild" (built from scratch;
+  no Dawn section is reused).
+
+  A shoppable lifestyle gallery: a Lustria title over a 3×2 grid (2×3 on mobile)
+  of lifestyle photos. Each photo carries a round "+" tag at a designer-placed
+  spot; clicking it opens the SAME quick-view popup used by the product grid.
+
+  Quick view: this section owns the shared popup — it renders the popup markup
+  (snippets/gift-popup) once and loads its controller (assets/gift-popup.js).
+  The marker click is delegated from `document`, so every "+" tag below opens
+  it. Markers carry only the product HANDLE; price/variants are fetched live at
+  click time, never hardcoded.
+
+  Every red-rectangle value (title, each photo, its product, and the tag's X/Y
+  position) is editable in the Theme Customizer. Visual values are var(--tv-*)
+  tokens from gift-tokens.css.
+{% endcomment %}
+
+{%- comment -%} Page-scoped assets: tokens first, then this section + popup. {%- endcomment -%}
+{{ 'gift-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gift-lookbook.css' | asset_url | stylesheet_tag }}
+{{ 'gift-popup.css' | asset_url | stylesheet_tag }}
+
+<section class="gift-lookbook" id="gift-lookbook-{{ section.id }}">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="gift-lookbook__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+
+  <ul class="gift-lookbook__grid" role="list">
+    {%- for block in section.blocks -%}
+      {%- assign image = block.settings.image -%}
+      {%- assign product = block.settings.product -%}
+      <li class="gift-lookbook__item" {{ block.shopify_attributes }}>
+        <div class="gift-lookbook__media">
+          {%- comment -%}
+            Image source priority:
+            1. Customizer image_picker (per-block override) — wins for any viewport.
+            2. The tagged product's media (product.featured_image) — pulled live
+               from the product DB, so uploading to the product's Media in admin
+               is reflected here automatically.
+            3. Bundled Figma photo — last-resort fallback so the section still
+               matches the comp before any product/media exists.
+          {%- endcomment -%}
+          {%- assign source_image = image | default: product.featured_image -%}
+          {%- if source_image != blank -%}
+            {{
+              source_image
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 50vw',
+                widths: '200, 340, 433, 700, 900',
+                class: 'gift-lookbook__image',
+                alt: source_image.alt | default: product.title | default: ''
+            }}
+          {%- else -%}
+            {%- assign fallback_src = 'gift-wild-' | append: forloop.index | append: '.jpg' -%}
+            <img
+              class="gift-lookbook__image"
+              src="{{ fallback_src | asset_url }}"
+              alt="{{ product.title | default: '' }}"
+              width="433"
+              height="444"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- comment -%}
+            "+" shop tag (Figma: #F8F8F8 90% circle + 1.5px plus), positioned
+            over the photo from the block's position ("X, Y" percent). The merchant
+            drags the tag in the Theme Customizer to set this (design-mode helper
+            copies the coordinates to paste back). Shown on every photo: with a
+            product it's a button that opens the quick view; otherwise decorative.
+
+            Position is one "X, Y" text field (e.g. "62, 56"). Spaces are stripped
+            then split on the comma; each axis falls back to a sensible centre so a
+            blank or half-filled value never breaks the inline style.
+          {%- endcomment -%}
+          {%- assign pos = block.settings.position | default: '60, 50' | replace: ' ', '' | split: ',' -%}
+          {%- assign mx = pos[0] | default: '60' -%}
+          {%- assign my = pos[1] | default: '50' -%}
+          {%- capture marker_icon -%}{{ 'gift-plus.svg' | inline_asset_content }}{%- endcapture -%}
+          {%- if product != blank -%}
+            <button
+              type="button"
+              class="gift-lookbook__marker"
+              style="--mx: {{ mx }}%; --my: {{ my }}%;"
+              data-gift-marker
+              data-product-handle="{{ product.handle }}"
+              aria-haspopup="dialog"
+              aria-label="{{ 'Quick view: ' | append: product.title }}"
+            >{{ marker_icon }}</button>
+          {%- else -%}
+            <span
+              class="gift-lookbook__marker gift-lookbook__marker--static"
+              style="--mx: {{ mx }}%; --my: {{ my }}%;"
+              aria-hidden="true"
+            >{{ marker_icon }}</span>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- else -%}
+      <li class="gift-lookbook__item gift-lookbook__item--hint">
+        Add lifestyle photos in the Customizer (up to six).
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+{%- comment -%} Single shared quick-view modal, opened by every "+" tag above. {%- endcomment -%}
+{% render 'gift-popup' %}
+
+{%- comment -%} Popup + Add-to-Cart logic (vanilla JS, deferred). {%- endcomment -%}
+<script src="{{ 'gift-popup.js' | asset_url }}" defer></script>
+
+{%- comment -%}
+  Marker placement helper — loaded ONLY in the Theme Customizer (never shipped to
+  shoppers). Lets the merchant drag a "+" tag over the photo; on release it copies
+  the "X, Y" percent so they can paste it into the block's Tag position field.
+  (Shopify offers no API to write a setting from the preview, so copy-paste is the
+  closest in-editor placement the platform allows.)
+{%- endcomment -%}
+{%- if request.design_mode -%}
+  <script src="{{ 'gift-marker-editor.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Gift Lookbook",
+  "tag": "section",
+  "class": "gift-lookbook-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tisso vison in the wild" }
+  ],
+  "blocks": [
+    {
+      "type": "spot",
+      "name": "Photo",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Lifestyle photo" },
+        { "type": "product", "id": "product", "label": "Tagged product", "info": "The \"+\" tag opens this product's quick view. Leave empty to hide the tag." },
+        { "type": "header", "content": "Tag position" },
+        { "type": "text", "id": "position", "label": "Position (X, Y)", "default": "60, 50", "info": "Drag the \"+\" tag on the photo above to place it — the X, Y percent is copied automatically, then paste it here. Or type two percentages, e.g. 62, 56." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Lookbook",
+      "blocks": [
+        { "type": "spot", "settings": { "position": "62, 56" } },
+        { "type": "spot", "settings": { "position": "85, 53" } },
+        { "type": "spot", "settings": { "position": "63, 21" } },
+        { "type": "spot", "settings": { "position": "72, 19" } },
+        { "type": "spot", "settings": { "position": "52, 26" } },
+        { "type": "spot", "settings": { "position": "76, 39" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

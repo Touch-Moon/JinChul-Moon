@@ -1,9 +1,10 @@
 /* =============================================================================
-   GIFT POPUP — quick-view modal (image · title · price · variants · add to cart)
+   GIFT POPUP — quick-view modal, built to Figma frame 1000009749
    -----------------------------------------------------------------------------
-   Layout/structure only; visuals come from var(--tv-*) tokens. Two columns on
-   desktop (media | body), stacked on mobile. The shell is reused for every
-   product; assets/gift-grid.js fills the content.
+   A compact white card: header row (square thumbnail + title/price/description),
+   then a segmented Color control, a bordered Size select, and a full-width black
+   Add-to-cart bar. Layout/structure only; visuals come from var(--tv-*) tokens.
+   The shell is reused for every product; assets/gift-popup.js fills the content.
    ============================================================================= */
 
 .gift-popup {
@@ -28,73 +29,112 @@ body.gift-popup-open { overflow: hidden; }
 .gift-popup__dialog {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--tv-space-5);
-  width: min(86rem, 100%);
+  display: flex;
+  flex-direction: column;
+  /* Figma card is 307px; min() lets it shrink to fit narrow phones (<355px
+     incl. the .gift-popup padding) instead of overflowing horizontally. */
+  width: min(307px, 100%);
   max-height: 90vh;
   overflow: auto;
-  padding: var(--tv-space-5);
+  padding: 36px 18px 25px;
   background: var(--tv-popup-bg);
   border-radius: var(--tv-radius-popup);
-  box-shadow: 0 2.4rem 6rem rgba(0, 0, 0, 0.25);
+  box-shadow: var(--tv-shadow-popup);
+}
+/* While the size dropdown is open, let its panel spill past the dialog edge
+   instead of forcing the dialog to scroll. (JS toggles this class.) */
+.gift-popup__dialog.is-size-open {
+  overflow: visible;
 }
 
 .gift-popup__close {
   position: absolute;
-  top: var(--tv-space-3);
-  right: var(--tv-space-3);
-  width: 3.2rem;
-  height: 3.2rem;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
   display: grid;
   place-items: center;
   border: none;
   background: transparent;
-  color: var(--tv-text);
+  color: var(--tv-black);
   cursor: pointer;
 }
-.gift-popup__close svg { width: 2rem; height: 2rem; }
+.gift-popup__close svg { width: 1.6rem; height: 1.6rem; }
+
+/* ── Header: thumbnail + product info ───────────────────────────────────────*/
+.gift-popup__head {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding-right: 0;
+}
 
 .gift-popup__media {
-  aspect-ratio: var(--tv-card-ratio);
+  flex: 0 0 120px;
+  width: 120px;
+  height: 140px;
   overflow: hidden;
-  border-radius: var(--tv-radius);
   background: var(--tv-border);
 }
-.gift-popup__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gift-popup__image { width: 120px; height: 140px; object-fit: cover; display: block; }
+
+.gift-popup__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
 
 .gift-popup__body {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-space-3);
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .gift-popup__title {
-  font-family: var(--tv-font-body);
-  font-size: var(--tv-font-size-h2);
-  font-weight: var(--tv-font-weight-bold);
   margin: 0;
-  color: var(--tv-text);
+  /* Fixed two-line box so the price/description below never shift when the title
+     wraps. Text is bottom-aligned, so 1- and 2-line titles share the same
+     baseline. */
+  height: 2.4em;                       /* two lines @ line-height 1.2 */
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-body); /* 16px */
+  font-weight: var(--tv-font-weight-light);
+  line-height: 1.2;
+  color: var(--tv-black);
 }
 
 .gift-popup__price {
-  font-family: var(--tv-font-accent);
-  font-size: var(--tv-font-size-h2);
   margin: 0;
-  color: var(--tv-text);
+  font-family: var(--tv-font-accent);  /* Lustria */
+  font-size: var(--tv-font-size-body); /* 16px */
+  line-height: 1.2;
+  color: var(--tv-black);
 }
 
 .gift-popup__description {
-  font-size: var(--tv-font-size-body);
-  line-height: var(--tv-line-height-body);
-  color: var(--tv-text-muted);
+  font-family: var(--tv-font-body);
+  font-weight: var(--tv-font-weight-light);
+  font-size: var(--tv-font-size-label); /* 12px */
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: var(--tv-black);
 }
 
-.gift-popup__form {
+.gift-popup__description p {
+  margin: 0;
+}
+
+/* ── Options: color + size selectors ────────────────────────────────────────*/
+.gift-popup__options {
   display: flex;
   flex-direction: column;
   gap: var(--tv-space-3);
-  margin-top: var(--tv-space-2);
+  margin-top: 10px;
 }
 
 .gift-popup__option { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
@@ -102,64 +142,217 @@ body.gift-popup-open { overflow: hidden; }
 
 .gift-popup__option-label {
   display: block;
-  font-size: var(--tv-font-size-label);
-  letter-spacing: var(--tv-tracking-label);
-  text-transform: uppercase;
-  color: var(--tv-text-muted);
-  margin-bottom: var(--tv-space-2);
+  margin-bottom: 0.6rem;               /* Figma gap label → box ~6px */
   padding: 0;
-}
-
-/* Color swatches. Each chip is painted from --swatch (set inline by JS from the
-   per-color token), so unknown colors fall back to a neutral chip. */
-.gift-popup__swatches { display: flex; flex-wrap: wrap; gap: var(--tv-space-2); }
-
-.gift-popup__swatch {
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 50%;
-  border: 1px solid var(--tv-border);
-  background: var(--swatch, #cccccc);
-  cursor: pointer;
-  padding: 0;
-  outline-offset: 2px;
-  transition: box-shadow var(--tv-duration) var(--tv-ease);
-}
-.gift-popup__swatch.is-selected {
-  box-shadow: 0 0 0 2px var(--tv-bg), 0 0 0 4px var(--tv-black);
-}
-
-.gift-popup__select-wrap { position: relative; }
-.gift-popup__select {
-  width: 100%;
-  padding: var(--tv-space-3);
   font-family: var(--tv-font-body);
-  font-size: var(--tv-font-size-body);
-  color: var(--tv-text);
-  background: var(--tv-bg);
-  border: 1px solid var(--tv-text);
-  border-radius: var(--tv-radius);
-  appearance: none;
+  font-size: 1.4rem;                   /* Figma label 14px */
+  line-height: 1.3;                    /* Figma */
+  color: var(--tv-popup-label);
+}
+
+/* Color — built from scratch (Figma "Component 208–210"). The wrapper stacks a
+   "Color" label over a segmented track, with a single black indicator layer that
+   slides to the selected cell while that cell's label inverts to white. The track
+   and the indicator are SIBLINGS: the indicator sits BEHIND the transparent track
+   (z-index) and shows through it, so each cell keeps its left colour-swatch bar
+   painted on top. --color-count / --color-i (set by JS) size and slide it. */
+.gift-popup__color {
+  --color-track-h: 4rem;               /* Figma track ~40px */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-1);
+}
+.gift-popup__color[hidden] { display: none; }
+
+.gift-popup__color-label {
+  font-family: var(--tv-font-body);
+  font-size: 1.4rem;                   /* Figma label 14px */
+  line-height: 1.3;
+  color: var(--tv-popup-label);
+}
+
+.gift-popup__color-options {
+  position: relative;
+  z-index: 1;                          /* sits above the indicator layer */
+  display: flex;
+  height: var(--color-track-h);
+  border: var(--tv-border-width) solid var(--tv-popup-hairline);
+}
+
+.gift-popup__color-option {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 1.2rem 0 1.5rem;          /* leave room for the swatch bar at left */
+  border: 0;
+  border-left: var(--tv-border-width) solid var(--tv-popup-hairline);
+  background: transparent;             /* indicator shows through when selected */
+  color: var(--tv-black);
+  font-family: var(--tv-font-body);
+  font-size: 1.8rem;                   /* Figma colour value 18px */
+  letter-spacing: -0.02em;             /* Figma -0.36px @ 18px */
+  text-align: left;
+  text-transform: capitalize;
+  white-space: nowrap;
   cursor: pointer;
+  transition: color var(--tv-duration) var(--tv-ease);
+}
+.gift-popup__color-option:first-child { border-left: 0; }
+
+/* Left colour-swatch bar = the option's actual colour; stays visible on top of
+   the indicator. The hex comes from --tv-swatch-<slug> (set inline by JS). */
+.gift-popup__color-option::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0.5rem;                       /* Figma ~5px accent bar */
+  background: var(--swatch, var(--tv-black));
+  border-right: 1px solid var(--tv-black);
+}
+.gift-popup__color-option[aria-checked="true"] { color: var(--tv-white); }
+
+/* The sliding black layer: one cell wide, translated to the selected index. */
+.gift-popup__color-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 0;                          /* behind the transparent track */
+  width: calc(100% / var(--color-count, 1));
+  height: var(--color-track-h);
+  background: var(--tv-black);
+  transform: translateX(calc(var(--color-i, 0) * 100%));
+  transition: transform var(--tv-duration) var(--tv-ease);
+  pointer-events: none;
+}
+
+/* Size — custom listbox (Figma Component 212/213). A trigger styled exactly like
+   the Figma select box (40px, 0.5px black border, 16px value left, divided
+   chevron in a 55px zone) plus an options panel that drops directly below it. */
+.gift-popup__select-wrap {
+  position: relative;                  /* anchor for the chevron + dropdown panel */
+  height: 4rem;                        /* Figma box 40px */
+  border: 0.05rem solid var(--tv-popup-hairline);  /* Figma 0.5px */
+}
+/* Trigger button fills the whole box (chevron zone included) = one click target.
+   Right padding keeps the value clear of the chevron. */
+.gift-popup__select {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 5.5rem 0 1.3rem;          /* left inset ~13px; right reserves arrow zone */
+  border: 0;
+  background: transparent;
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-body); /* 16px */
+  letter-spacing: -0.02em;             /* Figma -0.32px @ 16px */
+  color: var(--tv-black);
+  text-align: left;
+  cursor: pointer;
+}
+.gift-popup__select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Once a size is picked the value is centred within the value area only — the
+   right chevron zone (5.5rem padding-right) is excluded from the centring, so
+   the value sits in the middle of the space left of the arrow. Placeholder stays
+   left. */
+.gift-popup__select-wrap.has-value .gift-popup__select {
+  justify-content: center;
+  padding-left: 0;
+  text-align: center;
+}
+/* Chevron is a non-interactive overlay on the right; clicks pass through to the
+   trigger beneath it, so the divider + arrow are part of its hit area. */
+.gift-popup__chevron {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5.5rem;                       /* Figma chevron zone 55px (20.3% of 271) */
+  display: grid;
+  place-items: center;
+  border-left: 0.05rem solid var(--tv-popup-hairline);  /* Figma vertical divider 0.5px */
+  pointer-events: none;                /* clicks fall through to the trigger */
+}
+.gift-popup__chevron svg {
+  width: 1.2rem;                       /* Figma arrow-down 12px */
+  height: auto;
+  transition: transform var(--tv-duration) var(--tv-ease);
+}
+/* Strip the theme focus ring; the open-chevron flip is the only affordance. */
+.gift-popup__select:focus,
+.gift-popup__select:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+/* Chevron points up only while the dropdown is open. */
+.gift-popup__select-wrap.is-open .gift-popup__chevron svg {
+  transform: rotate(180deg);
+}
+
+/* Options panel — drops directly below the trigger, same width, sharing its
+   bottom border. Figma Component 212: 36px rows, 16px centred value. */
+.gift-popup__size-list {
+  position: absolute;
+  top: calc(100% + 1px);               /* drop 1px below the trigger */
+  left: -0.05rem;                      /* align with the trigger's 0.5px border */
+  right: -0.05rem;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 21.6rem;                 /* ~6 rows, then scrolls */
+  overflow-y: auto;
+  background: var(--tv-popup-bg);
+  border: 0.05rem solid var(--tv-popup-hairline);
+  border-top: 0;                       /* shares the trigger's bottom edge */
+}
+.gift-popup__size-list[hidden] { display: none; }
+.gift-popup__size-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;             /* Figma: option value centred */
+  height: 3.6rem;                      /* Figma 36px */
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-body); /* 16px */
+  letter-spacing: -0.02em;             /* Figma -0.32px @ 16px */
+  color: var(--tv-black);
+  cursor: pointer;
+}
+/* White → black invert on hover, keyboard-active, or the current selection
+   (Figma Component 212 variant "Group 1000008198"). */
+.gift-popup__size-option:hover,
+.gift-popup__size-option.is-active,
+.gift-popup__size-option[aria-selected="true"] {
+  background: var(--tv-black);
+  color: var(--tv-white);
 }
 
 .gift-popup__notice {
+  margin: 0;
   font-size: var(--tv-font-size-label);
   color: var(--tv-text-muted);
-  margin: 0;
 }
 .gift-popup__notice[hidden] { display: none; }
 .gift-popup__notice--error { color: var(--tv-swatch-red); }
 
-.gift-popup__add { width: 100%; justify-content: center; }
-.gift-popup__add:disabled { opacity: 0.45; cursor: not-allowed; }
-
-/* Stack to a single column on mobile. */
-@media screen and (max-width: 749px) {
-  .gift-popup__dialog { grid-template-columns: 1fr; gap: var(--tv-space-4); }
-  .gift-popup__media { max-height: 40vh; }
+/* Add to cart — the shared gift-button, stretched full-width in the popup.
+   Everything else (height, arrow, hover) comes from .gift-button. */
+.gift-popup__add {
+  width: 100%;
+  margin-top: 51px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gift-popup__swatch { transition: none; }
+  .gift-popup__color-indicator,
+  .gift-popup__color-option,
+  .gift-popup__chevron svg { transition: none; }   /* chevron still flips, just instantly */
 }

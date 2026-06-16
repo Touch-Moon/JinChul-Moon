@@ -5,20 +5,30 @@
   type plain label text and never the "→".
 
   Params:
-    label   {string}  required — visible text (no arrow; it is added here)
-    url     {string}  optional — when present the control is a link
-    variant {string}  'accent' (yellow→black on hover, default)
-                      | 'invert' (black→yellow on hover)
-    type    {string}  button type when not a link (default 'button')
-    id      {string}  optional element id (e.g. for JS hooks)
+    label      {string}  required — visible text (no arrow; it is added here)
+    url        {string}  optional — when present the control is a link
+    variant    {string}  'accent' (yellow→black on hover, default)
+                         | 'invert' (black→yellow on hover)
+    type       {string}  button type when not a link (default 'button')
+    id         {string}  optional element id (e.g. for JS hooks)
+    class      {string}  optional extra class(es) for layout overrides
+                         (e.g. 'gift-popup__add' to make it full-width)
+    attributes {string}  optional raw attributes to splice in, e.g. a JS hook
+                         like 'data-gift-popup-add'
 
   Usage:
     {% render 'gift-button', label: 'Shop now', url: '/collections/all', variant: 'invert' %}
+    {% render 'gift-button', label: 'Add to cart', variant: 'invert', type: 'submit',
+       class: 'gift-popup__add', attributes: 'data-gift-popup-add' %}
 {% endcomment %}
 
 {%- liquid
   assign gb_variant = variant | default: 'accent'
   assign gb_type = type | default: 'button'
+  assign gb_class = 'gift-button gift-button--' | append: gb_variant
+  if class != blank
+    assign gb_class = gb_class | append: ' ' | append: class
+  endif
 -%}
 
 {%- capture gb_inner -%}
@@ -33,11 +43,11 @@
 {%- endcapture -%}
 
 {%- if url != blank -%}
-  <a class="gift-button gift-button--{{ gb_variant }}" href="{{ url }}"{% if id != blank %} id="{{ id }}"{% endif %}>
+  <a class="{{ gb_class }}" href="{{ url }}"{% if id != blank %} id="{{ id }}"{% endif %}{% if attributes != blank %} {{ attributes }}{% endif %}>
     {{ gb_inner }}
   </a>
 {%- else -%}
-  <button class="gift-button gift-button--{{ gb_variant }}" type="{{ gb_type }}"{% if id != blank %} id="{{ id }}"{% endif %}>
+  <button class="{{ gb_class }}" type="{{ gb_type }}"{% if id != blank %} id="{{ id }}"{% endif %}{% if attributes != blank %} {{ attributes }}{% endif %}>
     {{ gb_inner }}
   </button>
 {%- endif -%}
