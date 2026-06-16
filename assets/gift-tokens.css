@@ -36,6 +36,8 @@
   /* Button hover lift — x:0 y:2 blur:4 spread:0, rgba(0,0,0,.20). */
   --tv-btn-shadow-hover: 0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.2);
 
+  --tv-nav-bg: #f5f5f5;                /* [FIGMA] top bar (nav) background        */
+
   --tv-strip-bg: #f2f2f2;              /* [FIGMA] bottom sustainability strip bg */
   --tv-strip-text: #555555;            /* [FIGMA] strip text                     */
 
@@ -88,8 +90,9 @@
   --tv-space-5: 3.2rem;
   --tv-space-6: 4.8rem;
 
-  --tv-container: var(--page-width, 120rem);     /* max content width           */
-  --tv-gutter: clamp(2rem, 5vw, 5rem);           /* horizontal page padding     */
+  --tv-container: 144rem;                        /* [FIGMA] design width 1440px — page centers to this */
+  --tv-gutter: clamp(2rem, 5vw, 5rem);           /* horizontal page padding: 50px desktop, less on mobile */
+  --tv-nav-height: 6.4rem;                       /* [FIGMA] top bar height (64px) */
   --tv-section-gap: clamp(6rem, 12vw, 24rem);    /* [FIGMA] gap between sections (Figma 240px) */
 
   /* ── Grid (Grid section) ────────────────────────────────────────────────  */

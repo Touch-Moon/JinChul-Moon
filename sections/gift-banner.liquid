@@ -31,22 +31,46 @@
   id="gift-banner-{{ section.id }}"
   {% if section.settings.accent_color != blank %}style="--tv-yellow: {{ section.settings.accent_color }};"{% endif %}
 >
-  <header class="gift-banner__bar">
-    {%- if section.settings.logo_text != blank -%}
-      <span class="gift-banner__logo">{{ section.settings.logo_text }}</span>
-    {%- endif -%}
+  <header class="gift-banner__bar" data-gift-nav>
+    <div class="gift-banner__bar-inner">
+      {%- comment -%} Mobile-only: toggles the panel below (tagline + Choose gift). {%- endcomment -%}
+      <button
+        type="button"
+        class="gift-banner__menu-toggle"
+        aria-expanded="false"
+        aria-controls="gift-nav-panel-{{ section.id }}"
+        aria-label="Open menu"
+        data-gift-nav-toggle
+      >
+        <svg class="gift-banner__menu-icon gift-banner__menu-icon--open" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+        </svg>
+        <svg class="gift-banner__menu-icon gift-banner__menu-icon--close" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+        </svg>
+      </button>
 
-    {%- if section.settings.tagline != blank -%}
-      <p class="gift-banner__tagline">{{ section.settings.tagline }}</p>
-    {%- endif -%}
+      {%- if section.settings.logo_text != blank -%}
+        <span class="gift-banner__logo" role="img" aria-label="{{ section.settings.logo_text }}">
+          {{ 'gift-logo.svg' | inline_asset_content }}
+        </span>
+      {%- endif -%}
 
-    {%- if section.settings.choose_gift_label != blank -%}
-      {% render 'gift-button',
-        label: section.settings.choose_gift_label,
-        url: section.settings.choose_gift_url,
-        variant: 'accent'
-      %}
-    {%- endif -%}
+      {%- comment -%} Inline on desktop (display:contents); collapsible panel on mobile. {%- endcomment -%}
+      <div class="gift-banner__nav" id="gift-nav-panel-{{ section.id }}">
+        {%- if section.settings.tagline != blank -%}
+          <p class="gift-banner__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.choose_gift_label != blank -%}
+          {% render 'gift-button',
+            label: section.settings.choose_gift_label,
+            url: section.settings.choose_gift_url,
+            variant: 'accent'
+          %}
+        {%- endif -%}
+      </div>
+    </div>
   </header>
 
   <div class="gift-banner__hero">
@@ -81,6 +105,9 @@
     </div>
   {%- endif -%}
 </section>
+
+{%- comment -%} Mobile nav toggle (vanilla JS, deferred). {%- endcomment -%}
+<script src="{{ 'gift-banner.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

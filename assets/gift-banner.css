@@ -5,6 +5,16 @@
    gift-tokens.css so the design pass happens there, not here.
    ============================================================================= */
 
+/* ── Full-page comp: no theme chrome on this template ────────────────────────
+   The Figma page begins at the TISSO VISON bar, so on the gift-guide page the
+   theme's header group (announcement + header) and footer group are hidden.
+   This stylesheet only loads where the gift-banner section renders, so every
+   other page keeps its normal header/footer. */
+.shopify-section-group-header-group,
+.shopify-section-group-footer-group {
+  display: none;
+}
+
 /* ── Shared button (gift-button snippet) ─────────────────────────────────────
    Two variants invert their colors on hover, per the Figma spec:
      --accent : yellow → black  (Choose gift, Add to cart)
@@ -16,8 +26,8 @@
   gap: var(--tv-space-2);
   padding: var(--tv-space-3) var(--tv-space-5);
   font-family: var(--tv-font-body);
-  font-weight: var(--tv-font-weight-bold);
-  font-size: var(--tv-font-size-label);
+  font-weight: var(--tv-font-weight-body); /* Figma: CTA is Jost Regular 400 */
+  font-size: var(--tv-font-size-body); /* Figma: CTA label is 16px */
   letter-spacing: var(--tv-tracking-label);
   text-transform: uppercase;
   text-decoration: none;
@@ -66,26 +76,56 @@
   font-family: var(--tv-font-body);
 }
 
-/* ── Top bar ─────────────────────────────────────────────────────────────── */
+/* ── Top bar (nav) ─────────────────────────────────────────────────────────
+   Figma: 1440×64 bar, #f5f5f5, 50px side padding. Logo left, tagline centered,
+   Choose Gift button right (flex space-between reproduces the 360px gaps).     */
 .gift-banner__bar {
+  background-color: var(--tv-nav-bg);   /* full-bleed (100% width) bar */
+}
+
+/* Inner content is centered to the 1440px design width with 50px side padding;
+   the bar background still spans the full viewport. */
+.gift-banner__bar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--tv-space-4);
-  padding: var(--tv-space-4) var(--tv-gutter);
+  width: 100%;
+  max-width: var(--tv-container);
+  margin-inline: auto;
+  min-height: var(--tv-nav-height);
+  padding-inline: var(--tv-gutter);
+}
+
+/* Choose Gift sits 44px tall inside the 64px bar (10px top/bottom). */
+.gift-banner__bar-inner .gift-button {
+  min-height: 4.4rem;
+  padding-block: 0;
+}
+
+/* Desktop: no hamburger; the nav's children act as direct bar items so the
+   tagline centers and the button sits at the right (flex space-between). */
+.gift-banner__menu-toggle {
+  display: none;
+}
+.gift-banner__nav {
+  display: contents;
 }
 
 .gift-banner__logo {
-  font-weight: var(--tv-font-weight-bold);
-  font-size: var(--tv-font-size-body);
-  letter-spacing: var(--tv-tracking-label);
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+.gift-banner__logo svg {
+  display: block;
+  width: auto;
+  height: 1.9rem;                /* Figma wordmark = 19px */
 }
 
 .gift-banner__tagline {
   margin: 0;
   font-size: var(--tv-font-size-body);
-  color: var(--tv-text-muted);
+  color: var(--tv-text);         /* Figma: black, not muted */
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
@@ -153,10 +193,62 @@
 
 /* ── Mobile (< 750px) ────────────────────────────────────────────────────── */
 @media screen and (max-width: 749px) {
-  .gift-banner__bar {
+  /* Figma mobile: hamburger (left) + centered logo. The tagline + Choose Gift
+     drop into a collapsible panel below the bar, toggled by the hamburger. */
+  .gift-banner__bar-inner {
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--tv-space-4);
+  }
+
+  .gift-banner__menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: var(--tv-gutter);
+    top: 0;
+    height: var(--tv-nav-height);
+    width: 2.4rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--tv-text);
+    cursor: pointer;
+  }
+  .gift-banner__menu-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+  .gift-banner__menu-icon--close {
+    display: none;
+  }
+  .gift-banner__menu-toggle[aria-expanded='true'] .gift-banner__menu-icon--open {
+    display: none;
+  }
+  .gift-banner__menu-toggle[aria-expanded='true'] .gift-banner__menu-icon--close {
+    display: inline;
+  }
+
+  /* Logo occupies the full first row, centered, at the 64px bar height. */
+  .gift-banner__logo {
+    flex-basis: 100%;
+    justify-content: center;
+    min-height: var(--tv-nav-height);
+  }
+
+  /* Collapsible panel — closed by default, revealed when the bar is --open. */
+  .gift-banner__nav {
+    display: none;
+    flex-basis: 100%;
     flex-direction: column;
-    gap: var(--tv-space-3);
-    text-align: center;
+    align-items: center;
+    gap: var(--tv-space-4);
+    padding-bottom: var(--tv-space-5);
+  }
+  .gift-banner__bar--open .gift-banner__nav {
+    display: flex;
   }
 }
 

@@ -1,0 +1,68 @@
+{% comment %}
+  Gift Guide — quick-view popup (rendered ONCE by the grid section and reused by
+  every marker). It is an empty shell: assets/gift-grid.js fills the title, price,
+  description, and variants from live product JSON each time it opens. Built from
+  scratch; markup is dialog-accessible (role, aria, labelled close).
+
+  Static labels here are translation-ready; product content is injected by JS.
+{% endcomment %}
+
+<div class="gift-popup" data-gift-popup hidden>
+  {%- comment -%} Dimmer; clicking it closes the popup (handled in JS). {%- endcomment -%}
+  <div class="gift-popup__overlay" data-gift-popup-overlay></div>
+
+  <div
+    class="gift-popup__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="gift-popup-title"
+    data-gift-popup-dialog
+  >
+    <button type="button" class="gift-popup__close" data-gift-popup-close aria-label="Close quick view">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+      </svg>
+    </button>
+
+    <div class="gift-popup__media">
+      <img class="gift-popup__image" data-gift-popup-image src="" alt="" />
+    </div>
+
+    <div class="gift-popup__body">
+      <h2 class="gift-popup__title" id="gift-popup-title" data-gift-popup-title></h2>
+      <p class="gift-popup__price" data-gift-popup-price></p>
+      <div class="gift-popup__description" data-gift-popup-description></div>
+
+      <form class="gift-popup__form" data-gift-popup-form>
+        {%- comment -%} Color: swatch buttons (one option group). Built by JS. {%- endcomment -%}
+        <fieldset class="gift-popup__option" data-gift-popup-colors hidden>
+          <legend class="gift-popup__option-label">Color</legend>
+          <div class="gift-popup__swatches" data-gift-popup-swatches></div>
+        </fieldset>
+
+        {%- comment -%} Size: native select (accessible, mobile-friendly). {%- endcomment -%}
+        <fieldset class="gift-popup__option" data-gift-popup-sizes hidden>
+          <legend class="gift-popup__option-label">Size</legend>
+          <div class="gift-popup__select-wrap">
+            <select class="gift-popup__select" data-gift-popup-size aria-label="Choose your size">
+              <option value="" disabled selected>Choose your size</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <p class="gift-popup__notice" data-gift-popup-notice role="status" aria-live="polite" hidden></p>
+
+        <button
+          type="submit"
+          class="gift-button gift-button--invert gift-popup__add"
+          data-gift-popup-add
+        >
+          <span class="gift-button__label">Add to cart</span>
+          <svg class="gift-button__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

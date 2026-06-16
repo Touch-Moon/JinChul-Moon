@@ -1,0 +1,165 @@
+/* =============================================================================
+   GIFT POPUP — quick-view modal (image · title · price · variants · add to cart)
+   -----------------------------------------------------------------------------
+   Layout/structure only; visuals come from var(--tv-*) tokens. Two columns on
+   desktop (media | body), stacked on mobile. The shell is reused for every
+   product; assets/gift-grid.js fills the content.
+   ============================================================================= */
+
+.gift-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--tv-space-4);
+}
+.gift-popup[hidden] { display: none; }
+
+/* Body scroll lock while the popup is open (class set by JS). */
+body.gift-popup-open { overflow: hidden; }
+
+.gift-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--tv-popup-overlay);
+}
+
+.gift-popup__dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tv-space-5);
+  width: min(86rem, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  padding: var(--tv-space-5);
+  background: var(--tv-popup-bg);
+  border-radius: var(--tv-radius-popup);
+  box-shadow: 0 2.4rem 6rem rgba(0, 0, 0, 0.25);
+}
+
+.gift-popup__close {
+  position: absolute;
+  top: var(--tv-space-3);
+  right: var(--tv-space-3);
+  width: 3.2rem;
+  height: 3.2rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  color: var(--tv-text);
+  cursor: pointer;
+}
+.gift-popup__close svg { width: 2rem; height: 2rem; }
+
+.gift-popup__media {
+  aspect-ratio: var(--tv-card-ratio);
+  overflow: hidden;
+  border-radius: var(--tv-radius);
+  background: var(--tv-border);
+}
+.gift-popup__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.gift-popup__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-3);
+}
+
+.gift-popup__title {
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-h2);
+  font-weight: var(--tv-font-weight-bold);
+  margin: 0;
+  color: var(--tv-text);
+}
+
+.gift-popup__price {
+  font-family: var(--tv-font-accent);
+  font-size: var(--tv-font-size-h2);
+  margin: 0;
+  color: var(--tv-text);
+}
+
+.gift-popup__description {
+  font-size: var(--tv-font-size-body);
+  line-height: var(--tv-line-height-body);
+  color: var(--tv-text-muted);
+}
+
+.gift-popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-3);
+  margin-top: var(--tv-space-2);
+}
+
+.gift-popup__option { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+.gift-popup__option[hidden] { display: none; }
+
+.gift-popup__option-label {
+  display: block;
+  font-size: var(--tv-font-size-label);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-text-muted);
+  margin-bottom: var(--tv-space-2);
+  padding: 0;
+}
+
+/* Color swatches. Each chip is painted from --swatch (set inline by JS from the
+   per-color token), so unknown colors fall back to a neutral chip. */
+.gift-popup__swatches { display: flex; flex-wrap: wrap; gap: var(--tv-space-2); }
+
+.gift-popup__swatch {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  border: 1px solid var(--tv-border);
+  background: var(--swatch, #cccccc);
+  cursor: pointer;
+  padding: 0;
+  outline-offset: 2px;
+  transition: box-shadow var(--tv-duration) var(--tv-ease);
+}
+.gift-popup__swatch.is-selected {
+  box-shadow: 0 0 0 2px var(--tv-bg), 0 0 0 4px var(--tv-black);
+}
+
+.gift-popup__select-wrap { position: relative; }
+.gift-popup__select {
+  width: 100%;
+  padding: var(--tv-space-3);
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-body);
+  color: var(--tv-text);
+  background: var(--tv-bg);
+  border: 1px solid var(--tv-text);
+  border-radius: var(--tv-radius);
+  appearance: none;
+  cursor: pointer;
+}
+
+.gift-popup__notice {
+  font-size: var(--tv-font-size-label);
+  color: var(--tv-text-muted);
+  margin: 0;
+}
+.gift-popup__notice[hidden] { display: none; }
+.gift-popup__notice--error { color: var(--tv-swatch-red); }
+
+.gift-popup__add { width: 100%; justify-content: center; }
+.gift-popup__add:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Stack to a single column on mobile. */
+@media screen and (max-width: 749px) {
+  .gift-popup__dialog { grid-template-columns: 1fr; gap: var(--tv-space-4); }
+  .gift-popup__media { max-height: 40vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-popup__swatch { transition: none; }
+}
