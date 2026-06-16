@@ -1,7 +1,9 @@
 /* =============================================================================
-   GIFT GUIDE — grid markers, quick-view popup, and Add to Cart
+   GIFT GUIDE — quick-view popup + Add to Cart (shared controller)
    -----------------------------------------------------------------------------
-   Vanilla JS only (no jQuery). One shared popup is reused by every grid marker.
+   Vanilla JS only (no jQuery). One shared popup is reused by every "+" marker
+   on the page (the lookbook tags). The click is delegated from `document`, so
+   any [data-gift-marker] carrying a product handle opens it.
 
    Flow:
      marker click → fetch /products/{handle}.js (cached) → render the popup

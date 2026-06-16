@@ -9,24 +9,25 @@
         "headline": "The Gift Guide",
         "subcopy": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
         "shop_now_label": "Shop now",
-        "strip_text": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+        "strip_text": "Sustainable, ethically made clothes in sizes XXS to 6XL",
+        "strip_text_mobile": "Sustainable, ethically made activewear"
       }
     },
-    "gift-grid": {
-      "type": "gift-grid",
+    "gift-lookbook": {
+      "type": "gift-lookbook",
       "blocks": {
-        "p1": { "type": "product", "settings": {} },
-        "p2": { "type": "product", "settings": {} },
-        "p3": { "type": "product", "settings": {} },
-        "p4": { "type": "product", "settings": {} },
-        "p5": { "type": "product", "settings": {} },
-        "p6": { "type": "product", "settings": {} }
+        "s1": { "type": "spot", "settings": { "pos_x": 62, "pos_y": 56 } },
+        "s2": { "type": "spot", "settings": { "pos_x": 85, "pos_y": 53 } },
+        "s3": { "type": "spot", "settings": { "pos_x": 63, "pos_y": 21 } },
+        "s4": { "type": "spot", "settings": { "pos_x": 72, "pos_y": 19 } },
+        "s5": { "type": "spot", "settings": { "pos_x": 52, "pos_y": 26 } },
+        "s6": { "type": "spot", "settings": { "pos_x": 76, "pos_y": 39 } }
       },
-      "block_order": ["p1", "p2", "p3", "p4", "p5", "p6"],
+      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6"],
       "settings": {
-        "heading": ""
+        "heading": "Tisso vison in the wild"
       }
     }
   },
-  "order": ["gift-banner", "gift-grid"]
+  "order": ["gift-banner", "gift-lookbook"]
 }

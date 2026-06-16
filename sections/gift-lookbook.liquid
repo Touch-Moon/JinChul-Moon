@@ -1,0 +1,136 @@
+{% comment %}
+  Gift Guide — Lookbook section "Tisso vison in the wild" (built from scratch;
+  no Dawn section is reused).
+
+  A shoppable lifestyle gallery: a Lustria title over a 3×2 grid (2×3 on mobile)
+  of lifestyle photos. Each photo carries a round "+" tag at a designer-placed
+  spot; clicking it opens the SAME quick-view popup used by the product grid.
+
+  Quick view: this section owns the shared popup — it renders the popup markup
+  (snippets/gift-popup) once and loads its controller (assets/gift-popup.js).
+  The marker click is delegated from `document`, so every "+" tag below opens
+  it. Markers carry only the product HANDLE; price/variants are fetched live at
+  click time, never hardcoded.
+
+  Every red-rectangle value (title, each photo, its product, and the tag's X/Y
+  position) is editable in the Theme Customizer. Visual values are var(--tv-*)
+  tokens from gift-tokens.css.
+{% endcomment %}
+
+{%- comment -%} Page-scoped assets: tokens first, then this section + popup. {%- endcomment -%}
+{{ 'gift-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gift-lookbook.css' | asset_url | stylesheet_tag }}
+{{ 'gift-popup.css' | asset_url | stylesheet_tag }}
+
+<section class="gift-lookbook" id="gift-lookbook-{{ section.id }}">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="gift-lookbook__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+
+  <ul class="gift-lookbook__grid" role="list">
+    {%- for block in section.blocks -%}
+      {%- assign image = block.settings.image -%}
+      {%- assign product = block.settings.product -%}
+      <li class="gift-lookbook__item" {{ block.shopify_attributes }}>
+        <div class="gift-lookbook__media">
+          {%- if image != blank -%}
+            {%- comment -%} Customizer override wins for any viewport. {%- endcomment -%}
+            {{
+              image
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 50vw',
+                widths: '200, 340, 433, 700, 900',
+                class: 'gift-lookbook__image',
+                alt: image.alt | default: product.title | default: ''
+            }}
+          {%- else -%}
+            {%- comment -%}
+              Fallback: the bundled Figma lookbook photo for this slot, so the
+              section matches the comp out of the box. Replaced as soon as the
+              merchant uploads an image above.
+            {%- endcomment -%}
+            {%- assign fallback_src = 'gift-wild-' | append: forloop.index | append: '.jpg' -%}
+            <img
+              class="gift-lookbook__image"
+              src="{{ fallback_src | asset_url }}"
+              alt="{{ product.title | default: '' }}"
+              width="433"
+              height="444"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- comment -%}
+            "+" shop tag, positioned over the photo from the block's X/Y percent.
+            Only rendered when a product is linked (an empty tag has nothing to
+            open). Reuses the grid's data hooks so the shared popup handles it.
+          {%- endcomment -%}
+          {%- if product != blank -%}
+            <button
+              type="button"
+              class="gift-lookbook__marker"
+              style="--mx: {{ block.settings.pos_x }}%; --my: {{ block.settings.pos_y }}%;"
+              data-gift-marker
+              data-product-handle="{{ product.handle }}"
+              aria-haspopup="dialog"
+              aria-label="{{ 'Quick view: ' | append: product.title }}"
+            >
+              <span aria-hidden="true">+</span>
+            </button>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- else -%}
+      <li class="gift-lookbook__item gift-lookbook__item--hint">
+        Add lifestyle photos in the Customizer (up to six).
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+{%- comment -%} Single shared quick-view modal, opened by every "+" tag above. {%- endcomment -%}
+{% render 'gift-popup' %}
+
+{%- comment -%} Popup + Add-to-Cart logic (vanilla JS, deferred). {%- endcomment -%}
+<script src="{{ 'gift-popup.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Gift Lookbook",
+  "tag": "section",
+  "class": "gift-lookbook-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tisso vison in the wild" }
+  ],
+  "blocks": [
+    {
+      "type": "spot",
+      "name": "Photo",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Lifestyle photo" },
+        { "type": "product", "id": "product", "label": "Tagged product", "info": "The \"+\" tag opens this product's quick view. Leave empty to hide the tag." },
+        { "type": "header", "content": "Tag position" },
+        { "type": "range", "id": "pos_x", "label": "Horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 60 },
+        { "type": "range", "id": "pos_y", "label": "Vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Lookbook",
+      "blocks": [
+        { "type": "spot", "settings": { "pos_x": 62, "pos_y": 56 } },
+        { "type": "spot", "settings": { "pos_x": 85, "pos_y": 53 } },
+        { "type": "spot", "settings": { "pos_x": 63, "pos_y": 21 } },
+        { "type": "spot", "settings": { "pos_x": 72, "pos_y": 19 } },
+        { "type": "spot", "settings": { "pos_x": 52, "pos_y": 26 } },
+        { "type": "spot", "settings": { "pos_x": 76, "pos_y": 39 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

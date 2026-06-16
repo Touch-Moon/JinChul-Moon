@@ -116,6 +116,22 @@
   --tv-marker-size: 4rem;              /* [FIGMA] "+" circle diameter            */
   --tv-marker-offset: 1.6rem;          /* [FIGMA] inset of "+" from card edge    */
 
+  /* ── Lookbook ("Tisso vison in the wild") ───────────────────────────────────
+     Figma desktop frame 1:1662 (3×2, 433×444 photos, 20px gap, 36px Lustria
+     title) and mobile 1:1946 (2×3, 169×186px photos, 4px gap, 24px title). */
+  --tv-wild-pad-top: 9rem;             /* 90px strip → lookbook gap (desktop)    */
+  --tv-wild-pad-top-mobile: 4rem;      /* 40px strip → lookbook gap (mobile)     */
+  --tv-wild-title-size: clamp(2.4rem, 1.7rem + 1.6vw, 3.6rem); /* 24px → 36px   */
+  --tv-wild-cols: 3;                   /* desktop columns (3×2)                  */
+  --tv-wild-cols-mobile: 2;            /* mobile columns (2×3)                   */
+  --tv-wild-gap: 2rem;                 /* 20px between photos (desktop)          */
+  --tv-wild-gap-mobile: 0.4rem;        /* 4px between photos (mobile)            */
+  --tv-wild-head-gap: 3rem;            /* 30px title → grid (desktop)            */
+  --tv-wild-ratio: 433 / 444;          /* desktop photo ratio (~0.975)           */
+  --tv-wild-ratio-mobile: 169 / 186.42;/* mobile photo ratio (~0.907)            */
+  --tv-wild-marker-size: 2.2rem;       /* 22px "+" tag (desktop)                 */
+  --tv-wild-marker-size-mobile: 1.6rem;/* ~15.7px "+" tag (mobile)               */
+
   /* ── Shape & elevation ──────────────────────────────────────────────────  */
   --tv-radius: 0rem;                   /* [FIGMA] generic corner radius          */
   --tv-radius-pill: 3rem;              /* [FIGMA] yellow pill button radius      */

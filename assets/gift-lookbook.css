@@ -1,0 +1,129 @@
+/* =============================================================================
+   GIFT LOOKBOOK — "Tisso vison in the wild"
+   -----------------------------------------------------------------------------
+   Lustria title + a shoppable photo grid (3×2 desktop, 2×3 mobile). The "+" tag
+   reuses the grid's quick-view popup (assets/gift-grid.js). Layout/structure
+   only; every visual value is a var(--tv-*) token from gift-tokens.css.
+   ============================================================================= */
+
+.gift-lookbook {
+  max-width: var(--tv-container);
+  margin-inline: auto;
+  /* Figma: 90px above the title (strip → lookbook gap), section gap below. */
+  padding: var(--tv-wild-pad-top) var(--tv-gutter) var(--tv-section-gap);
+  font-family: var(--tv-font-body);
+}
+
+/* Figma: Lustria 36px, black, left-aligned, 30px above the grid. */
+.gift-lookbook__heading {
+  margin: 0 0 var(--tv-wild-head-gap);
+  font-family: var(--tv-font-accent);
+  font-size: var(--tv-wild-title-size);
+  font-weight: var(--tv-font-weight-body);   /* Lustria ships Regular only */
+  line-height: 1.2;
+  color: var(--tv-black);
+}
+
+.gift-lookbook__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--tv-wild-cols), 1fr);
+  gap: var(--tv-wild-gap);
+}
+
+.gift-lookbook__item {
+  position: relative;
+}
+
+/* Fixed-ratio media box keeps the grid even regardless of photo dimensions. */
+.gift-lookbook__media {
+  position: relative;
+  aspect-ratio: var(--tv-wild-ratio);
+  overflow: hidden;
+  border-radius: var(--tv-radius);
+  background: var(--tv-border);
+}
+
+.gift-lookbook__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gift-lookbook__image--placeholder {
+  object-fit: contain;
+  padding: var(--tv-space-5);
+  background: var(--tv-border);
+}
+
+/* "+" shop tag — placed from the block's X/Y percent (--mx / --my), centered on
+   that point. White circle + black glyph, matching the grid marker but smaller. */
+.gift-lookbook__marker {
+  position: absolute;
+  left: var(--mx, 50%);
+  top: var(--my, 50%);
+  transform: translate(-50%, -50%);
+  width: var(--tv-wild-marker-size);
+  height: var(--tv-wild-marker-size);
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--tv-marker-bg);
+  color: var(--tv-marker-text);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--tv-btn-shadow-hover);
+  transition:
+    transform var(--tv-duration) var(--tv-ease),
+    background-color var(--tv-duration) var(--tv-ease),
+    color var(--tv-duration) var(--tv-ease);
+}
+.gift-lookbook__marker:hover,
+.gift-lookbook__marker:focus-visible {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: var(--tv-black);
+  color: var(--tv-white);
+}
+
+.gift-lookbook__item--hint {
+  grid-column: 1 / -1;
+  font-size: var(--tv-font-size-label);
+  color: var(--tv-text-muted);
+  text-align: center;
+  padding: var(--tv-space-3);
+}
+
+/* ── Mobile (< 750px) — Figma 1:1946: 2 columns, 4px gap, centered 24px title,
+   slightly taller photo ratio, smaller tag. ───────────────────────────────── */
+@media screen and (max-width: 749px) {
+  .gift-lookbook {
+    padding-top: var(--tv-wild-pad-top-mobile);   /* 40px strip → lookbook gap */
+  }
+  .gift-lookbook__heading {
+    text-align: center;
+    margin-bottom: var(--tv-wild-gap);   /* 20px title → grid on mobile */
+  }
+  .gift-lookbook__grid {
+    grid-template-columns: repeat(var(--tv-wild-cols-mobile), 1fr);
+    gap: var(--tv-wild-gap-mobile);
+  }
+  .gift-lookbook__media {
+    aspect-ratio: var(--tv-wild-ratio-mobile);
+  }
+  .gift-lookbook__marker {
+    width: var(--tv-wild-marker-size-mobile);
+    height: var(--tv-wild-marker-size-mobile);
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-lookbook__marker { transition: none; }
+  .gift-lookbook__marker:hover,
+  .gift-lookbook__marker:focus-visible { transform: translate(-50%, -50%); }
+}
