@@ -16,12 +16,12 @@
     "gift-lookbook": {
       "type": "gift-lookbook",
       "blocks": {
-        "s1": { "type": "spot", "settings": { "product": "orange-wide-leg", "position": "60, 56" } },
-        "s2": { "type": "spot", "settings": { "product": "tailored-jacket", "position": "83, 50" } },
-        "s3": { "type": "spot", "settings": { "product": "accordion-pleated-dress", "position": "63, 20" } },
-        "s4": { "type": "spot", "settings": { "product": "green-trench-coat", "position": "72, 20" } },
-        "s5": { "type": "spot", "settings": { "product": "tennis-blue-t-shirt", "position": "52, 25" } },
-        "s6": { "type": "spot", "settings": { "product": "long-sleeve-tennis-top", "position": "75, 40" } }
+        "s1": { "type": "spot", "settings": { "product": "black-leather-bag", "position": "60, 56" } },
+        "s2": { "type": "spot", "settings": { "product": "blue-silk-tuxedo", "position": "83, 50" } },
+        "s3": { "type": "spot", "settings": { "product": "chequered-red-shirt", "position": "63, 20" } },
+        "s4": { "type": "spot", "settings": { "product": "classic-leather-jacket", "position": "72, 20" } },
+        "s5": { "type": "spot", "settings": { "product": "classic-varsity-top", "position": "52, 25" } },
+        "s6": { "type": "spot", "settings": { "product": "dark-denim-top", "position": "75, 40" } }
       },
       "block_order": ["s1", "s2", "s3", "s4", "s5", "s6"],
       "settings": {
