@@ -30,9 +30,11 @@
   overflow: hidden;              /* clip the wipe to the button box             */
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--tv-space-2);
-  padding: var(--tv-space-3) var(--tv-space-5);
+  justify-content: center;       /* label centred (arrow is taken out of flow) */
+  min-height: var(--tv-btn-height);
+  /* Right pad reserves the arrow zone so the centred label never overlaps the
+     absolutely-positioned arrow — works at any width (auto / fixed / 100%).    */
+  padding: 0 calc(var(--tv-btn-arrow-inset) + var(--tv-btn-arrow-size)) 0 var(--tv-space-4);
   font-family: var(--tv-font-body);
   font-weight: var(--tv-font-weight-body); /* Figma: CTA is Jost Regular 400 */
   font-size: var(--tv-font-size-body); /* Figma: CTA label is 16px */
@@ -70,14 +72,19 @@
   box-shadow: var(--tv-btn-shadow-hover);
 }
 
-/* Label + arrow ride above the wipe layer. */
-.gift-button__label,
-.gift-button__arrow {
+/* Label rides above the wipe layer; it's centred by the button's justify. */
+.gift-button__label {
   position: relative;
 }
+/* Arrow is pinned to the right edge for every gift-button (Figma: label centred,
+   arrow at the far right). Taken out of flow so it never shifts the label. */
 .gift-button__arrow {
+  position: absolute;
+  right: var(--tv-btn-arrow-inset);
+  top: 50%;
+  transform: translateY(-50%);
   display: inline-flex;
-  width: 2.7rem;                 /* 27px — ico-arrow.svg natural width */
+  width: var(--tv-btn-arrow-size);
   flex: 0 0 auto;
 }
 .gift-button__arrow svg {
@@ -109,6 +116,12 @@
 .gift-button--invert:hover,
 .gift-button--invert:focus-visible {
   color: var(--tv-black);
+}
+
+/* Disabled (e.g. the popup's Add to cart with no variant / sold out). */
+.gift-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* Reduced motion: keep the colour flip, drop the sweep. */
@@ -146,10 +159,12 @@
   padding-inline: var(--tv-gutter);
 }
 
-/* Choose Gift sits 44px tall inside the 64px bar (10px top/bottom). */
+/* Choose Gift: only the fixed 207px width is bar-specific (Figma btn-chose gift).
+   Height, centred label and right-pinned arrow all come from .gift-button. A
+   fixed width is required for the centred-label/right-arrow layout to resolve —
+   an auto-width button would hug its label and collapse the arrow against it. */
 .gift-banner__bar-inner .gift-button {
-  min-height: 4.4rem;
-  padding-block: 0;
+  width: 20.7rem;                  /* 207px */
 }
 
 /* Desktop: no hamburger; the nav's children act as direct bar items so the
@@ -249,20 +264,10 @@
   display: none;
 }
 
-/* Shop Now: fixed 220×50 (Figma btn-shop_now). The arrow is pinned to the right
-   (~23px from the edge → 170–197px) and the label is centered in the space to its
-   left (→ 55–142px), reproducing the component's label-44.7% / arrow-83.5% layout. */
+/* Shop Now: only the fixed 220px width is hero-specific (Figma btn-shop_now).
+   Height, centred label and right-pinned arrow all come from .gift-button. */
 .gift-banner__hero-content .gift-button {
   width: var(--tv-hero-btn-width);            /* 220px */
-  min-height: var(--tv-hero-btn-height);      /* 50px  */
-  justify-content: center;
-  padding: 0 2.3rem 0 0;                       /* right pad = arrow zone, centers label */
-}
-.gift-banner__hero-content .gift-button__arrow {
-  position: absolute;
-  right: 2.3rem;                               /* arrow right edge ~23px from button edge */
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 /* ── Sustainability strip ────────────────────────────────────────────────── */
@@ -369,9 +374,10 @@
     background-color: #f2f2f2;       /* Figma: panel bg (darker than bar) */
     text-align: center;
   }
-  /* Choose Gift is a wider 244×44 button inside the panel (Figma). */
+  /* Choose Gift is a wider 244px button inside the panel (Figma); height, label
+     and arrow all come from the shared .gift-button. */
   .gift-banner__nav-content .gift-button {
-    width: 24.4rem;                  /* Figma: 244px (height 44 from the bar rule) */
+    width: 24.4rem;                  /* Figma: 244px */
   }
 
   /* ── Hero (mobile) — Figma frame 3:1629 (375×421) ────────────────────────

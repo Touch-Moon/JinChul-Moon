@@ -16,12 +16,12 @@
     "gift-lookbook": {
       "type": "gift-lookbook",
       "blocks": {
-        "s1": { "type": "spot", "settings": { "pos_x": 62, "pos_y": 56 } },
-        "s2": { "type": "spot", "settings": { "pos_x": 85, "pos_y": 53 } },
-        "s3": { "type": "spot", "settings": { "pos_x": 63, "pos_y": 21 } },
-        "s4": { "type": "spot", "settings": { "pos_x": 72, "pos_y": 19 } },
-        "s5": { "type": "spot", "settings": { "pos_x": 52, "pos_y": 26 } },
-        "s6": { "type": "spot", "settings": { "pos_x": 76, "pos_y": 39 } }
+        "s1": { "type": "spot", "settings": { "product": "orange-wide-leg", "position": "60, 56" } },
+        "s2": { "type": "spot", "settings": { "product": "tailored-jacket", "position": "83, 50" } },
+        "s3": { "type": "spot", "settings": { "product": "accordion-pleated-dress", "position": "63, 20" } },
+        "s4": { "type": "spot", "settings": { "product": "green-trench-coat", "position": "72, 20" } },
+        "s5": { "type": "spot", "settings": { "product": "tennis-blue-t-shirt", "position": "52, 25" } },
+        "s6": { "type": "spot", "settings": { "product": "long-sleeve-tennis-top", "position": "75, 40" } }
       },
       "block_order": ["s1", "s2", "s3", "s4", "s5", "s6"],
       "settings": {

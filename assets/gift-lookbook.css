@@ -59,8 +59,9 @@
   background: var(--tv-border);
 }
 
-/* "+" shop tag — placed from the block's X/Y percent (--mx / --my), centered on
-   that point. White circle + black glyph, matching the grid marker but smaller. */
+/* "+" shop tag (Figma: #F8F8F8 90% circle + thin 1.5px plus) — placed from the
+   block's X/Y percent (--mx / --my) and centered on that point. The plus is an
+   inline SVG using currentColor, so it inverts with the circle on hover. */
 .gift-lookbook__marker {
   position: absolute;
   left: var(--mx, 50%);
@@ -68,26 +69,34 @@
   transform: translate(-50%, -50%);
   width: var(--tv-wild-marker-size);
   height: var(--tv-wild-marker-size);
+  padding: 0;
   display: grid;
   place-items: center;
   border: none;
   border-radius: 50%;
-  background: var(--tv-marker-bg);
-  color: var(--tv-marker-text);
-  font-size: 1.4rem;
-  line-height: 1;
+  background: var(--tv-wild-marker-bg);
+  color: var(--tv-black);
   cursor: pointer;
-  box-shadow: var(--tv-btn-shadow-hover);
   transition:
     transform var(--tv-duration) var(--tv-ease),
     background-color var(--tv-duration) var(--tv-ease),
     color var(--tv-duration) var(--tv-ease);
 }
-.gift-lookbook__marker:hover,
-.gift-lookbook__marker:focus-visible {
+.gift-lookbook__marker svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Interactive marker (product linked): lift + invert on hover/focus. */
+.gift-lookbook__marker:not(.gift-lookbook__marker--static):hover,
+.gift-lookbook__marker:not(.gift-lookbook__marker--static):focus-visible {
   transform: translate(-50%, -50%) scale(1.1);
   background: var(--tv-black);
   color: var(--tv-white);
+}
+/* Decorative marker (no product yet): present but not clickable. */
+.gift-lookbook__marker--static {
+  cursor: default;
 }
 
 .gift-lookbook__item--hint {
@@ -118,7 +127,6 @@
   .gift-lookbook__marker {
     width: var(--tv-wild-marker-size-mobile);
     height: var(--tv-wild-marker-size-mobile);
-    font-size: 1.1rem;
   }
 }
 
@@ -126,4 +134,67 @@
   .gift-lookbook__marker { transition: none; }
   .gift-lookbook__marker:hover,
   .gift-lookbook__marker:focus-visible { transform: translate(-50%, -50%); }
+}
+
+/* ── Theme Customizer only — marker placement helper ─────────────────────────
+   Styles for assets/gift-marker-editor.js, which is loaded solely in design
+   mode. Shoppers never receive that script, so these rules sit idle on the live
+   storefront (no markup carries these classes there). ───────────────────────── */
+
+/* Draggable affordance on the tags while editing. */
+.gift-lookbook__marker--draggable { cursor: grab; }
+.gift-lookbook__marker--draggable:active { cursor: grabbing; }
+
+/* Live "X, Y" readout that follows the pointer during a drag. Sits just above
+   and right of the cursor so it never hides under the fingertip/arrow. */
+.gift-lookbook__pos-badge {
+  position: fixed;
+  z-index: 2147483646;        /* above the editor preview chrome */
+  transform: translate(12px, -130%);
+  padding: 4px 8px;
+  border-radius: var(--tv-radius);
+  background: var(--tv-black);
+  color: var(--tv-white);
+  font-family: var(--tv-font-body);
+  font-size: 12px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;   /* digits don't jitter as values change */
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--tv-duration) var(--tv-ease);
+}
+.gift-lookbook__pos-badge.is-visible { opacity: 1; }
+
+/* "Copied — paste it" confirmation, pinned to the bottom-centre of the preview. */
+.gift-lookbook__toast {
+  position: fixed;
+  z-index: 2147483647;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 12px);
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: var(--tv-radius);
+  background: var(--tv-black);
+  color: var(--tv-white);
+  font-family: var(--tv-font-body);
+  font-size: var(--tv-font-size-label);
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--tv-duration) var(--tv-ease),
+              transform var(--tv-duration) var(--tv-ease);
+}
+.gift-lookbook__toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-lookbook__pos-badge,
+  .gift-lookbook__toast { transition: opacity var(--tv-duration) var(--tv-ease); }
+  .gift-lookbook__toast.is-visible { transform: translate(-50%, 0); }
 }
