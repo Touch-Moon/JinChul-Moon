@@ -1,12 +1,9 @@
 /* =============================================================================
    GIFT BANNER — mobile nav toggle
    -----------------------------------------------------------------------------
-   Vanilla JS (no jQuery). On mobile the hamburger reveals a panel holding the
-   tagline + "Choose gift" button (the items the desktop bar shows inline). On
-   desktop the panel uses `display: contents`, so this toggle is inert there.
-
-   Accessibility: the button drives aria-expanded; CSS swaps the hamburger ↔
-   close icon and shows/hides the panel from the bar's --open modifier.
+   The hamburger reveals a panel with the tagline + "Choose gift" button (shown
+   inline on desktop, where the panel is display:contents so this toggle is inert).
+   Drives aria-expanded; CSS handles the icon swap + panel reveal.
    ============================================================================= */
 (function () {
   'use strict';

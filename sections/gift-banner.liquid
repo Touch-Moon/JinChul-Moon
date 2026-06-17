@@ -1,19 +1,13 @@
 {% comment %}
-  Gift Guide — Banner section (built from scratch; no Dawn section is reused).
-
-  Layout skeleton:
-    .gift-banner__bar    top bar: logo · tagline · "Choose gift" button
-    .gift-banner__hero   headline · subcopy · "Shop now" button, over an
-                         optional line-art background image
+  Gift Guide — Banner (built from scratch). Three stacked parts:
+    .gift-banner__bar    top bar: logo · tagline · "Choose gift"
+    .gift-banner__hero   headline · subcopy · "Shop now" over a line-art bg
     .gift-banner__strip  full-width sustainability strip
-
-  All copy is editable in the Theme Customizer via the schema settings below
-  (satisfies "all text in red rectangles must be editable"). Visual design is
-  driven entirely by the tokens in gift-tokens.css.
+  All copy is Customizer-editable (schema below); visuals come from gift-tokens.css.
 {% endcomment %}
 
-{%- comment -%} Page-scoped assets: tokens first, then this section's layout. {%- endcomment -%}
 {{ 'gift-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gift-button.css' | asset_url | stylesheet_tag }}
 {{ 'gift-banner.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%} Figma fonts (Jost + Lustria) — loaded only where this section renders. {%- endcomment -%}
@@ -22,9 +16,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Lustria&display=swap">
 
 {%- comment -%}
-  Customizer→token bridge: an optional accent color injected as an inline custom
-  property overrides the gift-tokens.css default. Demonstrates the pattern; add
-  more bridged settings the same way as the design firms up.
+  Customizer→token bridge: an optional accent color, injected inline to override
+  the gift-tokens.css default. Pattern is extendable to other bridged settings.
 {%- endcomment -%}
 <section
   class="gift-banner"
@@ -57,9 +50,8 @@
       {%- endif -%}
 
       {%- comment -%}
-        Inline on desktop (nav + nav-inner are display:contents, so the tagline
-        and button sit directly in the bar). On mobile this is the slide-down
-        panel: the outer animates grid-rows 0fr→1fr, the inner clips with overflow.
+        Desktop: display:contents, so the tagline + button sit inline in the bar.
+        Mobile: a slide-down panel (outer animates grid-rows 0fr→1fr, inner clips).
       {%- endcomment -%}
       <div class="gift-banner__nav" id="gift-nav-panel-{{ section.id }}">
         <div class="gift-banner__nav-inner">
@@ -83,18 +75,17 @@
 
   <div class="gift-banner__hero">
     {%- comment -%}
-      Background line-art illustration. Defaults to the bundled Figma exports —
-      art-directed per viewport (mobile crop < 750px, full desktop above) so the
-      browser fetches only the matching SVG. A Customizer image override, when
-      set, wins for every viewport.
+      Background line-art. Defaults to bundled Figma exports, art-directed per
+      viewport (mobile crop < 750px, full above) so only one SVG is fetched.
+      A Customizer image override wins for every viewport.
     {%- endcomment -%}
     <div class="gift-banner__bg" aria-hidden="true">
       {%- if section.settings.background_image != blank -%}
         {{ section.settings.background_image | image_url: width: 2880 | image_tag: loading: 'eager', alt: '' }}
       {%- else -%}
         <picture>
-          <source media="(max-width: 749px)" srcset="{{ 'bg-mobile-hero.svg' | asset_url }}" width="375" height="264">
-          <img src="{{ 'bg_hero.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
+          <source media="(max-width: 749px)" srcset="{{ 'gift-hero-bg-mobile.svg' | asset_url }}" width="375" height="264">
+          <img src="{{ 'gift-hero-bg.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
         </picture>
       {%- endif -%}
     </div>

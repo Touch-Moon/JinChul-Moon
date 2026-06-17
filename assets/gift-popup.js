@@ -1,19 +1,12 @@
 /* =============================================================================
    GIFT GUIDE — quick-view popup + Add to Cart (shared controller)
    -----------------------------------------------------------------------------
-   Vanilla JS only (no jQuery). One shared popup is reused by every "+" marker
-   on the page (the lookbook tags). The click is delegated from `document`, so
-   any [data-gift-marker] carrying a product handle opens it.
+   One popup, reused by every "+" marker (clicks delegated from document).
+   Flow: marker → fetch /products/{handle}.js (cached) → pick Color + Size →
+   resolve variant by OPTION NAME (never a hardcoded ID) → /cart/add.js.
 
-   Flow:
-     marker click → fetch /products/{handle}.js (cached) → render the popup
-     → user picks Color + Size → resolve the matching variant by OPTION NAME
-     (never a hardcoded ID) → submit adds it via /cart/add.js.
-
-   Special rule (from the brief): whenever a variant with Color = Black AND
-   Size = Medium is added, the "Soft Winter Jacket" (handle: dark-winter-jacket)
-   is added in the same cart request. The target is resolved at runtime from its
-   own product JSON, so no IDs are baked in.
+   Brief rule: a Black + Medium variant also adds "Soft Winter Jacket"
+   (dark-winter-jacket) in the same request, resolved at runtime (no baked IDs).
    ============================================================================= */
 (function () {
   'use strict';
@@ -44,12 +37,8 @@
     return v === 'medium' || v === 'm';
   }
 
-  /* Format an integer amount of cents into the store currency. Uses Shopify's
-     own formatter when present, else falls back to Intl with the active
-     currency (keeps the preview harness and the live store consistent). */
-  /* The Gift Guide comps price everything in euros (e.g. "980,00€"), so format
-     to match the design regardless of the store's base currency. European
-     convention: comma decimal, period thousands, trailing € (no space). */
+  /* Cents → euro string ("980,00€") to match the comps, regardless of the
+     store's base currency (comma decimal, dot thousands, trailing €). */
   function formatMoney(cents) {
     var amount = (cents || 0) / 100;
     try {
@@ -107,21 +96,12 @@
   }
 
   /* ── Description sanitizer ─────────────────────────────────────────────────
-     product.description is the merchant's raw body_html, written or PASTED into
-     the Shopify admin. Paste-from-Word/Docs/Notion smuggles in junk the popup
-     never styles: <meta charset>, empty <span></span>, redundant wrapper <p>,
-     office tags (<o:p>), HTML comments, stray style/class attributes — and,
-     because we inject via innerHTML, potentially active markup too.
-
-     Rather than chase each artifact with a denylist, parse the HTML in an inert
-     document (DOMParser runs no scripts and fetches no resources) and rebuild it
-     against a small ALLOWLIST of tags real merchants actually use. Off-list
-     CONTAINER tags are unwrapped (tag dropped, text kept, so copy is never lost);
-     non-content tags (script/style/meta/…) are removed outright; empty inline
-     nodes vanish. Returns sanitized HTML, or '' when nothing meaningful remains.
-
-     Deliberate scope: a compact quick-view keeps inline/list formatting only.
-     <table>/<img>/<h2-6>/<blockquote> are unwrapped to their text by design. */
+     product.description is raw body_html — often PASTED from Word/Docs/Notion,
+     so it carries junk (empty <span>, <o:p>, wrapper <p>) and, since we inject
+     via innerHTML, potentially active markup. Parse it in an inert DOMParser doc
+     (no scripts, no fetches) and rebuild against an ALLOWLIST: off-list containers
+     are unwrapped (text kept), non-content tags dropped, empty inline nodes gone.
+     Quick-view keeps inline/list formatting only. */
 
   /* Tags kept, each mapped to the attributes allowed on it. A kept tag is
      emitted only when it holds content — any tag left empty after cleaning is
@@ -304,9 +284,10 @@
       if (btn) self.selectColor(btn.getAttribute('data-color'));
     });
 
-    /* Color keyboard: arrows move between cells (WAI-ARIA radiogroup pattern). */
+    /* Color keyboard: arrows move between cells, Home/End jump to ends
+       (WAI-ARIA radiogroup pattern). */
     this.els.swatches.addEventListener('keydown', function (e) {
-      if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].indexOf(e.key) === -1) return;
+      if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'Home', 'End'].indexOf(e.key) === -1) return;
       var cells = self.els.swatches.querySelectorAll('[data-color]');
       if (!cells.length) return;
       e.preventDefault();
@@ -314,22 +295,29 @@
       for (var i = 0; i < cells.length; i++) {
         if (cells[i].getAttribute('aria-checked') === 'true') { idx = i; break; }
       }
-      var dir = (e.key === 'ArrowLeft' || e.key === 'ArrowUp') ? -1 : 1;
-      var next = (idx + dir + cells.length) % cells.length;
+      var next;
+      if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = cells.length - 1;
+      else {
+        var dir = (e.key === 'ArrowLeft' || e.key === 'ArrowUp') ? -1 : 1;
+        next = (idx + dir + cells.length) % cells.length;
+      }
       self.selectColor(cells[next].getAttribute('data-color'));
       cells[next].focus();
     });
 
-    /* Custom size dropdown. The trigger toggles the panel; options commit on
-       click; click-away and Escape close it; full keyboard nav (arrows / Home /
-       End / Enter). Because we own the panel, open/close is exact — none of the
-       native picker's "stays focused after click-away" quirks. */
+    /* Custom size dropdown: trigger toggles; click / click-away / Escape / full
+       keyboard nav (arrows, Home, End, Enter). Owning the panel avoids the native
+       picker's click-away quirks. */
     this.els.sizeTrigger.addEventListener('click', function () {
       if (self.sizeOpen) self.closeSize(); else self.openSize();
     });
     this.els.sizeTrigger.addEventListener('keydown', function (e) {
       var k = e.key;
       if (k === 'Escape') { if (self.sizeOpen) { e.preventDefault(); self.closeSize(); } return; }
+      /* Tab closes the panel and moves focus on (no preventDefault), so the
+         control never leaves an open panel + stale aria-expanded behind. */
+      if (k === 'Tab' && self.sizeOpen) { self.closeSize(); return; }
       if (!self.sizeOpen) {
         if (k === 'ArrowDown' || k === 'ArrowUp' || k === 'Enter' || k === ' ') { e.preventDefault(); self.openSize(); }
         return;
@@ -405,14 +393,17 @@
       els.title.textContent = 'Unavailable';
       els.price.textContent = '';
       els.description.innerHTML = '';
+      els.image.src = '';
+      els.image.alt = '';
       els.colorsField.hidden = true;
       els.sizesField.hidden = true;
+      els.add.setAttribute('aria-disabled', 'true');
       return;
     }
 
     /* Media + text. */
     els.image.src = product.featured_image || (product.images && product.images[0]) || '';
-    els.image.alt = product.title || '';
+    els.image.alt = '';   /* decorative: the title is shown as the adjacent <h2> */
     els.title.textContent = product.title || '';
     els.price.textContent = formatMoney(product.price);
     els.description.innerHTML = sanitizeDescription(product.description || product.body_html);
@@ -575,23 +566,23 @@
     })[0] || null;
   };
 
-  /* Enable/disable Add to Cart and reflect price + stock for the choice. */
+  /* Enable/disable Add to Cart and reflect price + stock for the choice. Uses
+     aria-disabled (NOT the disabled attribute) so the button stays focusable —
+     AT users can land on it and hear the sold-out notice. The click handler
+     early-returns when there's no available variant. */
   PopupController.prototype.refreshAvailability = function () {
     var variant = this.currentVariant();
     var add = this.els.add;
 
     if (!variant) {
-      add.disabled = true;
       add.setAttribute('aria-disabled', 'true');
       return;
     }
     this.els.price.textContent = formatMoney(variant.price);
     if (variant.available) {
-      add.disabled = false;
       add.removeAttribute('aria-disabled');
       this.setNotice('', false);
     } else {
-      add.disabled = true;
       add.setAttribute('aria-disabled', 'true');
       this.setNotice('This option is sold out.', true);
     }
@@ -684,10 +675,11 @@
       .catch(function () {});
   };
 
+  /* The notice is a permanent live region (never toggled hidden), so screen
+     readers announce reliably. Empty text collapses it to zero height. */
   PopupController.prototype.setNotice = function (message, isError) {
     var notice = this.els.notice;
     notice.textContent = message;
-    notice.hidden = !message;
     notice.classList.toggle('gift-popup__notice--error', !!isError);
   };
 
@@ -696,6 +688,7 @@
   PopupController.prototype.reveal = function () {
     this.root.removeAttribute('hidden');
     document.body.classList.add('gift-popup-open');
+    this.setBackgroundInert(true);
     /* Move focus into the dialog for keyboard + screen-reader users. */
     var focusable = this.focusable();
     (focusable[0] || this.dialog).focus();
@@ -705,7 +698,35 @@
     if (this.sizeOpen) this.closeSize();
     this.root.setAttribute('hidden', '');
     document.body.classList.remove('gift-popup-open');
+    this.setBackgroundInert(false);
     if (this.lastTrigger) this.lastTrigger.focus();
+  };
+
+  /* True modality: while the dialog is open, make the rest of the page inert so
+     it can't be reached by Tab, pointer, OR the screen-reader virtual cursor.
+     The popup root is reparented to <body> in init(), so every OTHER body child
+     is inerted. `inert` is exclusively ours (free to add/remove); aria-hidden is
+     a fallback for older AT and is restored only where we added it. */
+  PopupController.prototype.setBackgroundInert = function (on) {
+    var root = this.root;
+    var self = this;
+    if (on) self.ariaHiddenByUs = [];
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el === root || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'LINK') return;
+      if (on) {
+        el.setAttribute('inert', '');
+        if (!el.hasAttribute('aria-hidden')) {
+          el.setAttribute('aria-hidden', 'true');
+          self.ariaHiddenByUs.push(el);
+        }
+      } else {
+        el.removeAttribute('inert');
+      }
+    });
+    if (!on) {
+      (self.ariaHiddenByUs || []).forEach(function (el) { el.removeAttribute('aria-hidden'); });
+      self.ariaHiddenByUs = [];
+    }
   };
 
   PopupController.prototype.focusable = function () {
@@ -737,6 +758,10 @@
   function init() {
     var popupEl = document.querySelector('[data-gift-popup]');
     if (!popupEl) return;
+    /* Reparent the popup to <body> so it's a top-level sibling of the page
+       content — lets setBackgroundInert() inert everything else cleanly, and
+       keeps the fixed overlay above the theme regardless of section stacking. */
+    if (popupEl.parentNode !== document.body) document.body.appendChild(popupEl);
     var controller = new PopupController(popupEl);
 
     document.addEventListener('click', function (e) {

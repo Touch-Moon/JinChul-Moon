@@ -1,18 +1,12 @@
 /* =============================================================================
    GIFT LOOKBOOK — marker placement helper (Theme Customizer ONLY)
    -----------------------------------------------------------------------------
-   Lets the merchant DRAG a "+" tag over its photo to place it. While dragging,
-   the tag follows the pointer and a live "X, Y" badge shows the percent. On
-   release, that "X, Y" is copied to the clipboard and a toast tells the merchant
-   to paste it into the block's "Tag position" field.
+   Drag a "+" tag over its photo to place it; on release the "X, Y" percent is
+   copied to the clipboard to paste into the block's "Tag position" field.
 
-   Why copy-paste and not auto-save: the editor preview runs in an iframe and
-   Shopify exposes no API to write a section setting from inside it. Dragging +
-   auto-copy is the closest in-editor placement the platform allows; the merchant
-   pastes once instead of guessing two slider values.
-
-   Loaded only when {{ request.design_mode }} is true, so it never ships to
-   shoppers. Vanilla JS, no dependencies. Self-guards on Shopify.designMode too.
+   Copy-paste, not auto-save: the editor preview is a sandboxed iframe and Shopify
+   exposes no API to write a section setting from it. Loaded only in design_mode,
+   so it never ships to shoppers. Self-guards on Shopify.designMode.
    ============================================================================= */
 (function () {
   'use strict';

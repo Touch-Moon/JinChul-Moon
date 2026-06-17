@@ -33,10 +33,10 @@ body.gift-popup-open { overflow: hidden; }
   flex-direction: column;
   /* Figma card is 307px; min() lets it shrink to fit narrow phones (<355px
      incl. the .gift-popup padding) instead of overflowing horizontally. */
-  width: min(307px, 100%);
+  width: min(30.7rem, 100%);           /* Figma card 307px */
   max-height: 90vh;
   overflow: auto;
-  padding: 36px 18px 25px;
+  padding: 3.6rem 1.8rem 2.5rem;       /* Figma 36 / 18 / 25 */
   background: var(--tv-popup-bg);
   border-radius: var(--tv-radius-popup);
   box-shadow: var(--tv-shadow-popup);
@@ -61,23 +61,27 @@ body.gift-popup-open { overflow: hidden; }
   cursor: pointer;
 }
 .gift-popup__close svg { width: 1.6rem; height: 1.6rem; }
+.gift-popup__close:focus-visible {
+  outline: 2px solid var(--tv-black);
+  outline-offset: 2px;
+}
 
 /* ── Header: thumbnail + product info ───────────────────────────────────────*/
 .gift-popup__head {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: flex-start;
   padding-right: 0;
 }
 
 .gift-popup__media {
-  flex: 0 0 120px;
-  width: 120px;
-  height: 140px;
+  flex: 0 0 12rem;                      /* Figma 120px */
+  width: 12rem;
+  height: 14rem;                       /* Figma 140px */
   overflow: hidden;
   background: var(--tv-border);
 }
-.gift-popup__image { width: 120px; height: 140px; object-fit: cover; display: block; }
+.gift-popup__image { width: 12rem; height: 14rem; object-fit: cover; display: block; }
 
 .gift-popup__info {
   flex: 1;
@@ -89,8 +93,8 @@ body.gift-popup-open { overflow: hidden; }
 .gift-popup__body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 1.2rem;
+  margin-top: 2rem;
 }
 
 .gift-popup__title {
@@ -134,28 +138,30 @@ body.gift-popup-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: var(--tv-space-3);
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 .gift-popup__option { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
 .gift-popup__option[hidden] { display: none; }
 
-.gift-popup__option-label {
-  display: block;
-  margin-bottom: 0.6rem;               /* Figma gap label → box ~6px */
-  padding: 0;
+/* Field labels — shared type; option-label adds the block spacing. */
+.gift-popup__option-label,
+.gift-popup__color-label {
   font-family: var(--tv-font-body);
   font-size: 1.4rem;                   /* Figma label 14px */
   line-height: 1.3;                    /* Figma */
   color: var(--tv-popup-label);
 }
+.gift-popup__option-label {
+  display: block;
+  margin-bottom: 0.6rem;               /* Figma gap label → box ~6px */
+  padding: 0;
+}
 
-/* Color — built from scratch (Figma "Component 208–210"). The wrapper stacks a
-   "Color" label over a segmented track, with a single black indicator layer that
-   slides to the selected cell while that cell's label inverts to white. The track
-   and the indicator are SIBLINGS: the indicator sits BEHIND the transparent track
-   (z-index) and shows through it, so each cell keeps its left colour-swatch bar
-   painted on top. --color-count / --color-i (set by JS) size and slide it. */
+/* Color (Figma "Component 208–210"): a segmented track with a black indicator
+   that slides to the selected cell (label inverts to white). Track and indicator
+   are SIBLINGS — the indicator sits behind the transparent track (z-index) so
+   each cell keeps its left swatch bar on top. --color-count / --color-i set by JS. */
 .gift-popup__color {
   --color-track-h: 4rem;               /* Figma track ~40px */
   position: relative;
@@ -164,13 +170,6 @@ body.gift-popup-open { overflow: hidden; }
   gap: var(--tv-space-1);
 }
 .gift-popup__color[hidden] { display: none; }
-
-.gift-popup__color-label {
-  font-family: var(--tv-font-body);
-  font-size: 1.4rem;                   /* Figma label 14px */
-  line-height: 1.3;
-  color: var(--tv-popup-label);
-}
 
 .gift-popup__color-options {
   position: relative;
@@ -215,6 +214,12 @@ body.gift-popup-open { overflow: hidden; }
   border-right: 1px solid var(--tv-black);
 }
 .gift-popup__color-option[aria-checked="true"] { color: var(--tv-white); }
+/* Keyboard focus ring. Arrow keys move selection WITH focus, so the focused cell
+   is always the selected (black) one — an inset light ring reads clearly on it. */
+.gift-popup__color-option:focus-visible {
+  outline: 2px solid var(--tv-white);
+  outline-offset: -4px;
+}
 
 /* The sliding black layer: one cell wide, translated to the selected index. */
 .gift-popup__color-indicator {
@@ -287,11 +292,15 @@ body.gift-popup-open { overflow: hidden; }
   height: auto;
   transition: transform var(--tv-duration) var(--tv-ease);
 }
-/* Strip the theme focus ring; the open-chevron flip is the only affordance. */
-.gift-popup__select:focus,
-.gift-popup__select:focus-visible {
+/* Drop the theme's mouse-focus ring, but keep a clear keyboard focus ring
+   (the chevron flip only shows when OPEN, so it isn't a focus affordance). */
+.gift-popup__select:focus {
   outline: none;
   box-shadow: none;
+}
+.gift-popup__select:focus-visible {
+  outline: 2px solid var(--tv-black);
+  outline-offset: 2px;
 }
 /* Chevron points up only while the dropdown is open. */
 .gift-popup__select-wrap.is-open .gift-popup__chevron svg {
@@ -336,19 +345,28 @@ body.gift-popup-open { overflow: hidden; }
   color: var(--tv-white);
 }
 
+/* Floats in the gap just above the Add button, OUT of flow, so showing a
+   message never grows the dialog. Anchored from the bottom (button height +
+   dialog bottom padding + a small gap) so the spot is the same regardless of the
+   content above. Always rendered (empty <p> is invisible) so the live region
+   keeps announcing — never display:none, which can swallow announcements. */
 .gift-popup__notice {
+  position: absolute;
+  left: 1.8rem;
+  right: 1.8rem;
+  bottom: calc(var(--tv-btn-height) + 2.5rem + 1rem);
   margin: 0;
   font-size: var(--tv-font-size-label);
   color: var(--tv-text-muted);
+  text-align: center;
 }
-.gift-popup__notice[hidden] { display: none; }
 .gift-popup__notice--error { color: var(--tv-swatch-red); }
 
 /* Add to cart — the shared gift-button, stretched full-width in the popup.
    Everything else (height, arrow, hover) comes from .gift-button. */
 .gift-popup__add {
   width: 100%;
-  margin-top: 51px;
+  margin-top: 5.1rem;                  /* Figma 51px gap above the CTA */
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2276,6 +2276,10 @@
                 "label": "Vertical"
               }
             },
+            "content": {
+              "label": "Content",
+              "info": "Add an icon or image and heading for each pairing"
+            },
             "pairing_1": {
               "label": "Pairing 1",
               "info": "Choose an icon or add an image for each pairing"

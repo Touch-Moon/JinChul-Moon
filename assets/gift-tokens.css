@@ -1,23 +1,15 @@
 /* =============================================================================
    GIFT GUIDE — DESIGN TOKEN LAYER
    =============================================================================
-   This is the SINGLE place to tune the visual design. Layout and component
-   files (gift-banner.css, gift-grid.css, gift-popup.css) only reference these
-   tokens via var(--tv-*) and should not need editing for visual changes.
+   The SINGLE place to tune the visual design — component files (gift-banner.css,
+   gift-lookbook.css, gift-popup.css) only read these via var(--tv-*).
 
-   FOR THE DESIGNER
-   ----------------
-   - Change VALUES here only.
-   - Tokens tagged  [FIGMA]  are placeholders — set them to the exact value
-     measured from the Figma file during the design pass.
-   - rem scale: Dawn sets html font-size to 62.5% (theme.liquid), so at the
-     default font scale  1rem = 10px . A Figma pixel maps 1:1 to rem ÷ 10
-     (e.g. 240px = 24rem, 96px = 9.6rem). Use rem so it scales with the theme.
-   - Some color/text tokens can ALSO be overridden per-section from the Theme
-     Customizer: a section injects inline `--tv-*` vars that win over these
-     defaults (see gift-banner.liquid). These values are the fallback.
-   - Breakpoints cannot be CSS variables inside @media. They are documented at
-     the bottom and used consistently across the component files.
+   FOR THE DESIGNER — change VALUES here only:
+   - [FIGMA]-tagged tokens are placeholders; set them from the Figma measurements.
+   - rem scale: Dawn sets html to 62.5%, so 1rem = 10px (240px → 24rem).
+   - Some tokens can be overridden per-section via inline --tv-* (see
+     gift-banner.liquid); these are the fallback.
+   - Breakpoints can't be CSS vars in @media — see the constants at the bottom.
    ============================================================================= */
 
 :root {
@@ -41,9 +33,6 @@
   --tv-strip-bg: #f5f5f5;              /* [FIGMA] bottom sustainability strip bg */
   --tv-strip-text: #000000;            /* [FIGMA] strip text                     */
 
-  --tv-marker-bg: #ffffff;             /* [FIGMA] grid "+" circle background     */
-  --tv-marker-text: #000000;           /* [FIGMA] grid "+" glyph                 */
-
   --tv-popup-bg: #ffffff;              /* [FIGMA] quick-view card background     */
   --tv-popup-overlay: rgba(0, 0, 0, 0.5); /* [FIGMA] dimmer behind popup        */
   --tv-popup-label: #333333;           /* [FIGMA] "Color"/"Size" field labels    */
@@ -59,17 +48,14 @@
   --tv-swatch-white: #ffffff;
 
   /* ── Typography ─────────────────────────────────────────────────────────
-     Families default to the store's Dawn fonts; override if Figma uses a
-     specific typeface. Sizes use clamp() so they scale between mobile↔desktop. */
-  /* Figma fonts (loaded via Google Fonts, page-scoped). Almost everything is
-     Jost; Lustria is an accent used in only TWO places.
+     Figma fonts (Google Fonts, page-scoped). Sizes use clamp() to scale
+     mobile↔desktop. Almost everything is Jost; Lustria is an accent used twice:
        --tv-font-body   → hero title, hero copy, buttons, card text, labels
-       --tv-font-accent → Grid section title + product price (only) */
+       --tv-font-accent → lookbook title + product price (only) */
   --tv-font-body: 'Jost', system-ui, sans-serif;
   --tv-font-accent: 'Lustria', Georgia, serif;
 
   --tv-font-size-hero: clamp(3rem, 5vw, 7rem);          /* Figma: "The Gift Guide" 70px desktop */
-  --tv-font-size-h2: 2.4rem;                            /* [FIGMA] popup product title  */
   --tv-font-size-subcopy: clamp(1.6rem, 2vw, 2rem);     /* Figma: hero sub-copy 20px desktop */
   --tv-font-size-body: 1.6rem;                          /* [FIGMA] descriptions, base   */
   --tv-font-size-label: 1.2rem;                         /* [FIGMA] uppercase labels     */
@@ -80,9 +66,7 @@
   --tv-font-weight-body: 400;                   /* [FIGMA] body                           */
 
   --tv-line-height-tight: 1;                    /* Figma: hero title leading-none (1.0)   */
-  --tv-line-height-body: 1.6;                   /* paragraphs                             */
   --tv-tracking-label: 0.1em;          /* [FIGMA] uppercase label letter-spacing */
-  --tv-tracking-wide: 0.12em;          /* [FIGMA] strip / wide labels            */
 
   /* ── Spacing & layout ───────────────────────────────────────────────────
      Modular scale for paddings/margins + page-level rhythm.                    */
@@ -107,24 +91,15 @@
   --tv-hero-inset-y: 5.1rem;           /* 51px text-group offset from bottom       */
   --tv-hero-subcopy-lh: 1.4;           /* Figma: sub-copy line-height              */
   --tv-hero-btn-width: 22rem;          /* 220px — hero Shop Now fixed width         */
+  --tv-hero-btn-height: 5rem;          /* 50px  — desktop hero Shop Now (taller CTA) */
 
   /* ── Shared CTA button (gift-button) ──────────────────────────────────────  */
-  /* Every gift-button is identical bar one thing: colour + label. Same height,
-     same centred label, same arrow pinned to the right. Only the width changes
-     per placement (hero 220 / popup full / bar auto), matching Figma.            */
-  --tv-btn-height: 5rem;               /* 50px  — shared height for all CTAs        */
+  /* Every gift-button shares one height + centred label + right-pinned arrow;
+     only the width (hero 220 / popup full / bar auto) and the desktop hero's
+     height differ, matching Figma.                                              */
+  --tv-btn-height: 4.5rem;             /* 45px  — shared height (desktop hero → 50) */
   --tv-btn-arrow-inset: 2.3rem;        /* 23px  — arrow gap from the right edge     */
-  --tv-btn-arrow-size: 2.7rem;         /* 27px  — ico-arrow.svg natural width       */
-
-  /* ── Grid (Grid section) ────────────────────────────────────────────────  */
-  --tv-grid-cols: 3;                   /* [FIGMA] desktop columns (6 = 3×2)      */
-  --tv-grid-cols-tablet: 2;            /* tablet columns                         */
-  --tv-grid-cols-mobile: 1;            /* mobile columns                         */
-  --tv-grid-gap: 1.6rem;               /* [FIGMA] gap between cards              */
-  --tv-card-ratio: 3 / 4;              /* [FIGMA] product card aspect ratio      */
-
-  --tv-marker-size: 4rem;              /* [FIGMA] "+" circle diameter            */
-  --tv-marker-offset: 1.6rem;          /* [FIGMA] inset of "+" from card edge    */
+  --tv-btn-arrow-size: 2.7rem;         /* 27px  — gift-arrow.svg natural width      */
 
   /* ── Lookbook ("Tisso vison in the wild") ───────────────────────────────────
      Figma desktop frame 1:1662 (3×2, 433×444 photos, 20px gap, 36px Lustria
@@ -142,10 +117,11 @@
   --tv-wild-marker-size: 2.2rem;       /* 22px "+" tag (desktop)                 */
   --tv-wild-marker-size-mobile: 1.6rem;/* ~15.7px "+" tag (mobile)               */
   --tv-wild-marker-bg: rgba(248, 248, 248, 0.9); /* Figma circle #F8F8F8 @ 90%   */
+  --tv-wild-marker-ring: rgba(255, 255, 255, 0.5); /* idle "click me" pulse halo (shoppable tags) */
+  --tv-wild-marker-pulse: 1.8s;        /* pulse loop length — calm; honors reduced-motion */
 
   /* ── Shape & elevation ──────────────────────────────────────────────────  */
   --tv-radius: 0rem;                   /* [FIGMA] generic corner radius          */
-  --tv-radius-pill: 3rem;              /* [FIGMA] yellow pill button radius      */
   --tv-radius-popup: 0rem;           /* [FIGMA] quick-view card radius         */
   --tv-border-width: 0.1rem;
   --tv-shadow-popup: 0 2rem 6rem rgba(0, 0, 0, 0.2); /* [FIGMA] popup elevation  */
