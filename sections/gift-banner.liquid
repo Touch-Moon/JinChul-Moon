@@ -87,19 +87,16 @@
 
   <div class="gift-banner__hero">
     {%- comment -%}
-      Background line-art. Defaults to bundled Figma exports, art-directed per
-      viewport (mobile crop < 750px, full above) so only one SVG is fetched.
-      A Customizer image override wins for every viewport.
+      Background line-art, art-directed per viewport via <picture> (mobile crop
+      < 750px, full above) so only one image is fetched. Fixed design asset, not a
+      Customizer setting — the brief only requires the red-rectangle text to be
+      editable.
     {%- endcomment -%}
     <div class="gift-banner__bg" aria-hidden="true">
-      {%- if section.settings.background_image != blank -%}
-        {{ section.settings.background_image | image_url: width: 2880 | image_tag: loading: 'eager', alt: '' }}
-      {%- else -%}
-        <picture>
-          <source media="(max-width: 749px)" srcset="{{ 'gift-hero-bg-mobile.svg' | asset_url }}" width="375" height="264">
-          <img src="{{ 'gift-hero-bg.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
-        </picture>
-      {%- endif -%}
+      <picture>
+        <source media="(max-width: 749px)" srcset="{{ 'gift-hero-bg-mobile.svg' | asset_url }}" width="375" height="264">
+        <img src="{{ 'gift-hero-bg.svg' | asset_url }}" alt="" width="1440" height="780" loading="eager">
+      </picture>
     </div>
 
     <div class="gift-banner__hero-content">
@@ -162,7 +159,6 @@
     { "type": "textarea", "id": "subcopy_mobile", "label": "Sub-copy (mobile)", "info": "Shorter copy shown on mobile. Leave empty to reuse the full sub-copy.", "default": "Discover Joy: Your Ultimate Holiday Gift Destination." },
     { "type": "text", "id": "shop_now_label", "label": "\"Shop now\" button label", "info": "Arrow is added automatically.", "default": "Shop now" },
     { "type": "url", "id": "shop_now_url", "label": "\"Shop now\" link" },
-    { "type": "image_picker", "id": "background_image", "label": "Hero background illustration", "info": "Transparent line-art PNG/SVG, exported from Figma." },
 
     { "type": "header", "content": "Sustainability strip" },
     { "type": "text", "id": "strip_text", "label": "Strip text", "default": "Sustainable, ethically made clothes in sizes XXS to 6XL" },
