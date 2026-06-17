@@ -43,8 +43,20 @@
         </svg>
       </button>
 
-      {%- if section.settings.logo_text != blank -%}
-        <span class="gift-banner__logo" role="img" aria-label="{{ section.settings.logo_text }}">
+      {%- comment -%} Logo: an uploaded image overrides the default vector wordmark. {%- endcomment -%}
+      {%- if section.settings.logo_image != blank -%}
+        <span class="gift-banner__logo">
+          <img
+            class="gift-banner__logo-img"
+            src="{{ section.settings.logo_image | image_url: width: 400 }}"
+            alt="{{ section.settings.logo_text | default: shop.name | escape }}"
+            width="{{ section.settings.logo_image.width }}"
+            height="{{ section.settings.logo_image.height }}"
+            loading="eager"
+          >
+        </span>
+      {%- else -%}
+        <span class="gift-banner__logo" role="img" aria-label="{{ section.settings.logo_text | default: shop.name | escape }}">
           {{ 'gift-logo.svg' | inline_asset_content }}
         </span>
       {%- endif -%}
@@ -138,7 +150,8 @@
   "class": "gift-banner-section",
   "settings": [
     { "type": "header", "content": "Top bar" },
-    { "type": "text", "id": "logo_text", "label": "Logo wordmark", "default": "TISSO VISON" },
+    { "type": "image_picker", "id": "logo_image", "label": "Logo image", "info": "Optional. Overrides the default logo." },
+    { "type": "text", "id": "logo_text", "label": "Logo alt text", "info": "Accessible name for the logo (also the uploaded image's alt text).", "default": "TISSO VISON" },
     { "type": "text", "id": "tagline", "label": "Tagline", "default": "Find the ideal gift for your loved ones." },
     { "type": "text", "id": "choose_gift_label", "label": "\"Choose gift\" button label", "info": "Arrow is added automatically.", "default": "Choose gift" },
     { "type": "url", "id": "choose_gift_url", "label": "\"Choose gift\" link" },
