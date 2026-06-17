@@ -117,6 +117,8 @@
   --tv-wild-marker-size: 2.2rem;       /* 22px "+" tag (desktop)                 */
   --tv-wild-marker-size-mobile: 1.6rem;/* ~15.7px "+" tag (mobile)               */
   --tv-wild-marker-bg: rgba(248, 248, 248, 0.9); /* Figma circle #F8F8F8 @ 90%   */
+  --tv-wild-marker-ring: rgba(255, 255, 255, 0.5); /* idle "click me" pulse halo (shoppable tags) */
+  --tv-wild-marker-pulse: 1.8s;        /* pulse loop length — calm; honors reduced-motion */
 
   /* ── Shape & elevation ──────────────────────────────────────────────────  */
   --tv-radius: 0rem;                   /* [FIGMA] generic corner radius          */

@@ -93,6 +93,33 @@
   cursor: default;
 }
 
+/* Idle "click me" pulse — a soft ring radiates from each shoppable tag to draw
+   the eye to the clickable spots. Interactive tags only; settles on hover/focus.
+   transform+opacity only (compositor-friendly); transparent fill never veils the
+   chip. Disabled under prefers-reduced-motion below. */
+.gift-lookbook__marker:not(.gift-lookbook__marker--static)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 0.2rem solid var(--tv-wild-marker-ring);
+  pointer-events: none;
+  animation: gift-marker-pulse var(--tv-wild-marker-pulse) var(--tv-ease) infinite;
+}
+.gift-lookbook__marker:not(.gift-lookbook__marker--static):hover::after,
+.gift-lookbook__marker:not(.gift-lookbook__marker--static):focus-visible::after {
+  animation: none;
+  opacity: 0;
+}
+/* Stagger the six tags (negative delays = no startup wait, already mid-cycle). */
+.gift-lookbook__item:nth-child(3n + 2) .gift-lookbook__marker::after { animation-delay: -0.6s; }
+.gift-lookbook__item:nth-child(3n + 3) .gift-lookbook__marker::after { animation-delay: -1.2s; }
+
+@keyframes gift-marker-pulse {
+  from { transform: scale(1); opacity: 0.7; }
+  to   { transform: scale(2.4); opacity: 0; }
+}
+
 .gift-lookbook__item--hint {
   grid-column: 1 / -1;
   font-size: var(--tv-font-size-label);
@@ -128,6 +155,7 @@
   .gift-lookbook__marker { transition: none; }
   .gift-lookbook__marker:hover,
   .gift-lookbook__marker:focus-visible { transform: translate(-50%, -50%); }
+  .gift-lookbook__marker::after { display: none; }   /* no idle pulse */
 }
 
 /* ── Theme Customizer only — marker placement helper ─────────────────────────
